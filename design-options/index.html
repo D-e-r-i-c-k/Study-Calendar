@@ -3,223 +3,209 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Study Planner – Design Options</title>
+  <title>Smart Study Planner – Editorial Design Concepts</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0c;
-      --surface: #141418;
-      --border: #2a2a30;
-      --text: #e8e6e3;
-      --text-dim: #8a8890;
-      --accent: #c8ff2e;
+      --bg: #faf7f2;
+      --ink: #1a1714;
+      --ink-light: #6b6560;
+      --ink-faint: #b5afa8;
+      --rust: #c4501c;
+      --rule: #d5cfc6;
     }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       background: var(--bg);
-      color: var(--text);
+      color: var(--ink);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      padding: 3rem 2rem;
     }
 
-    /* Grain overlay */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 100;
     }
 
-    .container {
-      text-align: center;
-      padding: 2rem;
-      max-width: 900px;
-      animation: fadeIn 1s ease;
-    }
+    .container { max-width: 950px; width: 100%; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .label {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
+    .pub-line {
+      font-size: 0.65rem;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800;
-      line-height: 1.05;
+      letter-spacing: 0.35em;
+      color: var(--ink-light);
+      text-align: center;
       margin-bottom: 1rem;
     }
 
-    h1 span {
-      display: block;
-      background: linear-gradient(135deg, var(--accent), #7ef5a0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 7vw, 5rem);
+      font-weight: 700;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 0.3rem;
     }
 
     .subtitle {
-      color: var(--text-dim);
-      font-size: 1.1rem;
-      max-width: 500px;
-      margin: 0 auto 3rem;
-      line-height: 1.6;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--ink-light);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0 2.5rem;
+    }
+
+    .rule::before, .rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--ink);
+    }
+
+    .rule span {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--ink-light);
+      white-space: nowrap;
     }
 
     .options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1.5rem;
       width: 100%;
     }
 
     .option-card {
-      position: relative;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.75rem 1.25rem;
       text-decoration: none;
-      color: var(--text);
-      background: var(--surface);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow: hidden;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      padding: 2rem 1.25rem 1.5rem;
+      text-align: center;
+      transition: all 0.4s ease;
+      position: relative;
+      background: var(--bg);
     }
 
     .option-card::before {
       content: '';
       position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      opacity: 0;
-      transition: opacity 0.4s ease;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 3px;
     }
 
-    .option-card:nth-child(1)::before { background: linear-gradient(135deg, #ff6b3520, #ff2e6320); }
-    .option-card:nth-child(2)::before { background: linear-gradient(135deg, #2ec4ff20, #7e6bff20); }
-    .option-card:nth-child(3)::before { background: linear-gradient(135deg, #ffd02e20, #ff8c2e20); }
-    .option-card:nth-child(4)::before { background: linear-gradient(135deg, #2eff8c20, #2ec4ff20); }
-    .option-card:nth-child(5)::before { background: linear-gradient(135deg, #ff2ec420, #c42eff20); }
-
-    .option-card:hover::before { opacity: 1; }
+    .option-card:nth-child(1)::before { background: var(--rust); }
+    .option-card:nth-child(2)::before { background: #1e3a5f; }
+    .option-card:nth-child(3)::before { background: #d4a32e; }
+    .option-card:nth-child(4)::before { background: #2d4a3e; }
+    .option-card:nth-child(5)::before { background: #6b3a5c; }
 
     .option-card:hover {
-      border-color: transparent;
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(26,23,20,0.1);
+      border-color: var(--ink);
     }
 
-    .option-number {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 800;
-      opacity: 0.15;
-      position: absolute;
-      top: 0.5rem;
-      right: 1rem;
-    }
-
-    .option-emoji {
-      font-size: 2rem;
-      margin-bottom: 0.75rem;
-      display: block;
+    .option-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.1;
+      margin-bottom: 0.5rem;
     }
 
     .option-name {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
       font-weight: 700;
-      font-size: 1rem;
       margin-bottom: 0.4rem;
-      position: relative;
-      z-index: 1;
     }
 
     .option-desc {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      line-height: 1.4;
-      position: relative;
-      z-index: 1;
+      font-size: 0.75rem;
+      color: var(--ink-light);
+      line-height: 1.5;
     }
 
-    .option-card:nth-child(1) .option-name { color: #ff6b35; }
-    .option-card:nth-child(2) .option-name { color: #6bb5ff; }
-    .option-card:nth-child(3) .option-name { color: #ffc832; }
-    .option-card:nth-child(4) .option-name { color: #2eff8c; }
-    .option-card:nth-child(5) .option-name { color: #e06bff; }
+    .option-card:nth-child(1) .option-name { color: var(--rust); }
+    .option-card:nth-child(2) .option-name { color: #1e3a5f; }
+    .option-card:nth-child(3) .option-name { color: #b8922a; }
+    .option-card:nth-child(4) .option-name { color: #2d4a3e; }
+    .option-card:nth-child(5) .option-name { color: #6b3a5c; }
 
     .footer {
       margin-top: 3rem;
-      color: var(--text-dim);
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-    }
-
-    @media (max-width: 600px) {
-      .options-grid { grid-template-columns: 1fr 1fr; }
-      .option-card:last-child { grid-column: span 2; }
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--ink-faint);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="label">Design Exploration</div>
-    <h1>Smart Study Planner<span>5 Visions</span></h1>
-    <p class="subtitle">Explore five radically different aesthetic directions for your study planning experience. Each is a complete UI concept.</p>
+    <div class="pub-line">Design Exploration · April 2026</div>
+    <h1>The Study Planner</h1>
+    <p class="subtitle">Five editorial variations on a single vision</p>
+
+    <div class="rule"><span>Select a Concept</span></div>
 
     <div class="options-grid">
       <a href="option1.html" class="option-card">
-        <span class="option-number">01</span>
-        <span class="option-emoji">🔥</span>
-        <div class="option-name">Neo-Brutalist</div>
-        <div class="option-desc">Raw, bold, unapologetic. Chunky borders & loud type.</div>
+        <div class="option-num">I</div>
+        <div class="option-name">Warm Broadsheet</div>
+        <div class="option-desc">Rust tones, classic serif, newspaper grid with ink warmth.</div>
       </a>
       <a href="option2.html" class="option-card">
-        <span class="option-number">02</span>
-        <span class="option-emoji">🧊</span>
-        <div class="option-name">Glass Aurora</div>
-        <div class="option-desc">Frosted glass, northern lights gradients, ethereal depth.</div>
+        <div class="option-num">II</div>
+        <div class="option-name">Dark Academia</div>
+        <div class="option-desc">Deep navy & gold, library atmosphere, candlelit scholarly tone.</div>
       </a>
       <a href="option3.html" class="option-card">
-        <span class="option-number">03</span>
-        <span class="option-emoji">📰</span>
-        <div class="option-name">Editorial Ink</div>
-        <div class="option-desc">Magazine-inspired, serif typography, ink & paper warmth.</div>
+        <div class="option-num">III</div>
+        <div class="option-name">Swiss Precision</div>
+        <div class="option-desc">Grid discipline, red+black, clean international typographic style.</div>
       </a>
       <a href="option4.html" class="option-card">
-        <span class="option-number">04</span>
-        <span class="option-emoji">🌿</span>
-        <div class="option-name">Organic Growth</div>
-        <div class="option-desc">Nature-inspired, earthy tones, flowing organic shapes.</div>
+        <div class="option-num">IV</div>
+        <div class="option-name">Quiet Journal</div>
+        <div class="option-desc">Maximal white-space, whisper-thin lines, contemplative & calm.</div>
       </a>
       <a href="option5.html" class="option-card">
-        <span class="option-number">05</span>
-        <span class="option-emoji">🕹️</span>
-        <div class="option-name">Retro Terminal</div>
-        <div class="option-desc">Monospaced, phosphor glow, CRT scanlines, hacker vibes.</div>
+        <div class="option-num">V</div>
+        <div class="option-name">Vintage Press</div>
+        <div class="option-desc">Letterpress texture, woodtype headers, aged patina & stamps.</div>
       </a>
     </div>
 
-    <div class="footer">Click any card to explore the full dashboard concept</div>
+    <div class="footer">Click any concept to explore the full dashboard</div>
   </div>
 </body>
 </html>

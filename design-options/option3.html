@@ -3,45 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Option 3 – Editorial Ink | Smart Study Planner</title>
+  <title>Option III – Swiss Precision | Smart Study Planner</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@200;300;400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #faf7f2;
-      --paper: #f5f0e8;
-      --ink: #1a1714;
-      --ink-light: #6b6560;
-      --ink-faint: #b5afa8;
-      --rust: #c4501c;
-      --navy: #1e3a5f;
-      --olive: #5a6e3a;
-      --burgundy: #8b2252;
-      --gold: #c49a3c;
-      --rule: #d5cfc6;
-      --serif: 'Fraunces', serif;
-      --body-serif: 'Source Serif 4', serif;
-      --sans: 'Libre Franklin', sans-serif;
+      --bg: #fafafa;
+      --white: #ffffff;
+      --black: #111111;
+      --gray-1: #333333;
+      --gray-2: #666666;
+      --gray-3: #999999;
+      --gray-4: #cccccc;
+      --gray-5: #eeeeee;
+      --red: #e60012;
+      --red-dim: rgba(230,0,18,0.08);
+      --display: 'Epilogue', sans-serif;
+      --body: 'Newsreader', serif;
     }
 
     body {
-      font-family: var(--body-serif);
+      font-family: var(--body);
       background: var(--bg);
-      color: var(--ink);
+      color: var(--black);
       min-height: 100vh;
-    }
-
-    /* Paper Texture */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 100;
     }
 
     /* Design nav */
@@ -50,110 +38,102 @@
       justify-content: center;
       gap: 0.5rem;
       padding: 0.6rem 2rem;
-      border-bottom: 1px solid var(--rule);
-      background: var(--ink);
+      background: var(--black);
       flex-wrap: wrap;
     }
 
     .design-nav a {
       text-decoration: none;
-      color: rgba(255,255,255,0.5);
-      font-family: var(--sans);
+      color: var(--gray-3);
+      font-family: var(--display);
       font-weight: 500;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       padding: 0.35rem 0.75rem;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
     .design-nav a:hover { color: white; }
-    .design-nav a.active { color: white; border-bottom: 2px solid var(--rust); }
+    .design-nav a.active { color: white; background: var(--red); }
 
-    /* Masthead */
-    .masthead {
-      text-align: center;
-      padding: 2rem 2rem 0.75rem;
-      border-bottom: 2px solid var(--ink);
+    /* Top Bar – Swiss grid header */
+    .top-bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      padding: 2rem 3rem 1rem;
+      border-bottom: 4px solid var(--black);
     }
 
-    .masthead-date {
-      font-family: var(--sans);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
-      color: var(--ink-light);
-      margin-bottom: 0.5rem;
-    }
-
-    .masthead h1 {
-      font-family: var(--serif);
-      font-size: 3.5rem;
+    .top-bar h1 {
+      font-family: var(--display);
+      font-size: 3.6rem;
       font-weight: 900;
+      line-height: 0.95;
+      text-transform: uppercase;
       letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 0.4rem;
     }
 
-    .masthead-rule {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 0.75rem auto 0;
-      max-width: 500px;
+    .top-bar h1 span {
+      color: var(--red);
     }
 
-    .masthead-rule::before, .masthead-rule::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--ink);
+    .top-meta {
+      text-align: right;
+      font-family: var(--display);
     }
 
-    .masthead-rule span {
-      font-family: var(--serif);
-      font-style: italic;
+    .top-meta .date {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--gray-2);
+      margin-bottom: 0.25rem;
+    }
+
+    .top-meta .edition {
       font-size: 0.9rem;
-      color: var(--ink-light);
+      font-weight: 700;
     }
 
     /* Nav */
-    .ed-nav {
+    .swiss-nav {
       display: flex;
-      justify-content: center;
-      gap: 2rem;
-      padding: 0.75rem 2rem;
-      border-bottom: 1px solid var(--rule);
+      gap: 0;
+      border-bottom: 1px solid var(--gray-4);
+      background: var(--white);
     }
 
-    .ed-nav a {
+    .swiss-nav a {
       text-decoration: none;
-      color: var(--ink-light);
-      font-family: var(--sans);
-      font-size: 0.75rem;
+      color: var(--gray-2);
+      font-family: var(--display);
+      font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      padding: 0.25rem 0;
-      border-bottom: 2px solid transparent;
-      transition: all 0.3s;
+      letter-spacing: 0.12em;
+      padding: 0.75rem 1.5rem;
+      border-right: 1px solid var(--gray-5);
+      transition: all 0.2s;
     }
 
-    .ed-nav a:hover { color: var(--ink); }
-    .ed-nav a.active { color: var(--ink); border-bottom-color: var(--rust); }
+    .swiss-nav a:hover { background: var(--gray-5); color: var(--black); }
+    .swiss-nav a.active { background: var(--red); color: white; }
 
-    /* Main Layout – Newspaper grid */
+    /* Main Layout */
     .main-layout {
       display: grid;
-      grid-template-columns: 250px 1fr 280px;
-      max-width: 1400px;
+      grid-template-columns: 240px 1fr 260px;
+      max-width: 1440px;
       margin: 0 auto;
       min-height: calc(100vh - 180px);
     }
 
     .col-left {
-      border-right: 1px solid var(--rule);
+      border-right: 1px solid var(--gray-4);
       padding: 1.5rem;
+      background: var(--white);
     }
 
     .col-main {
@@ -161,30 +141,21 @@
     }
 
     .col-right {
-      border-left: 1px solid var(--rule);
+      border-left: 1px solid var(--gray-4);
       padding: 1.5rem;
+      background: var(--white);
     }
 
-    /* Section Headers */
     .section-head {
-      font-family: var(--sans);
-      font-size: 0.6rem;
-      font-weight: 600;
+      font-family: var(--display);
+      font-size: 0.55rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--ink-light);
-      border-bottom: 1px solid var(--rule);
-      padding-bottom: 0.5rem;
+      letter-spacing: 0.25em;
+      color: var(--gray-2);
       margin-bottom: 1rem;
-    }
-
-    .section-head::after {
-      content: '';
-      display: block;
-      width: 30px;
-      height: 2px;
-      background: var(--rust);
-      margin-top: 0.5rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 3px solid var(--black);
     }
 
     /* Subject List */
@@ -193,300 +164,303 @@
     .subject-item {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px dotted var(--rule);
-      font-size: 0.85rem;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--gray-5);
+      font-family: var(--display);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .subject-item:hover { padding-left: 0.5rem; color: var(--red); }
+
+    .s-marker {
+      width: 16px;
+      height: 4px;
+    }
+
+    .s-marker.math { background: var(--red); }
+    .s-marker.science { background: var(--black); }
+    .s-marker.english { background: var(--gray-2); }
+    .s-marker.history { background: var(--gray-3); }
+    .s-marker.geo { background: var(--gray-4); }
+
+    /* Test Box */
+    .test-box {
+      border: 1px solid var(--gray-4);
+      margin-bottom: 0.75rem;
+      transition: all 0.2s;
       cursor: pointer;
     }
 
-    .subject-item:hover { color: var(--rust); }
+    .test-box:hover { border-color: var(--red); }
 
-    .subject-marker {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-    }
-
-    .subject-marker.math { background: var(--rust); }
-    .subject-marker.science { background: var(--navy); }
-    .subject-marker.english { background: var(--olive); }
-    .subject-marker.history { background: var(--burgundy); }
-    .subject-marker.geo { background: var(--gold); }
-
-    /* Test entries */
-    .test-entry {
-      margin-bottom: 1.25rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--rule);
-    }
-
-    .test-entry .overline {
-      font-family: var(--sans);
-      font-size: 0.6rem;
+    .test-box-head {
+      font-family: var(--display);
+      font-size: 0.55rem;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.15em;
-      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-bottom: 1px solid var(--gray-5);
     }
 
-    .test-entry .overline.rust { color: var(--rust); }
-    .test-entry .overline.navy { color: var(--navy); }
-    .test-entry .overline.olive { color: var(--olive); }
+    .test-box.math .test-box-head { background: var(--red); color: white; }
+    .test-box.science .test-box-head { background: var(--black); color: white; }
+    .test-box.english .test-box-head { background: var(--gray-2); color: white; }
 
-    .test-entry .headline {
-      font-family: var(--serif);
-      font-size: 1.15rem;
+    .test-box-body { padding: 0.75rem; }
+
+    .test-box .tb-name {
+      font-family: var(--display);
       font-weight: 700;
-      margin: 0.2rem 0;
-      line-height: 1.3;
+      font-size: 0.9rem;
     }
 
-    .test-entry .deck {
-      font-size: 0.82rem;
-      color: var(--ink-light);
-      font-style: italic;
+    .test-box .tb-date {
+      font-size: 0.78rem;
+      color: var(--gray-2);
+      margin-top: 0.15rem;
     }
 
-    .diff-bar {
+    .diff-blocks {
       display: flex;
       gap: 2px;
       margin-top: 0.5rem;
     }
 
-    .diff-bar span {
-      width: 18px;
-      height: 4px;
-      background: var(--rule);
+    .diff-blocks span {
+      width: 16px;
+      height: 8px;
+      background: var(--gray-5);
     }
 
-    .diff-bar span.filled { background: var(--rust); }
+    .diff-blocks span.filled { background: var(--red); }
 
     /* Week Header */
     .week-header {
       display: flex;
-      align-items: baseline;
+      align-items: end;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 3px solid var(--black);
     }
 
     .week-header h2 {
-      font-family: var(--serif);
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    .week-header .week-range {
-      font-family: var(--sans);
-      font-size: 0.75rem;
-      color: var(--ink-light);
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: -0.01em;
     }
 
-    .week-nav {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .week-nav button {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--rule);
-      background: none;
-      font-family: var(--serif);
-      font-size: 1rem;
-      color: var(--ink);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .week-nav button:hover { background: var(--ink); color: var(--bg); }
-
-    /* Calendar Table */
-    .calendar-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .calendar-table th {
-      font-family: var(--sans);
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--ink-light);
-      font-weight: 600;
-      padding: 0.5rem;
-      border-bottom: 2px solid var(--ink);
-      text-align: left;
-    }
-
-    .calendar-table th .th-date {
-      font-family: var(--serif);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--ink);
-      letter-spacing: 0;
-      text-transform: none;
+    .week-header h2 span {
       display: block;
-    }
-
-    .calendar-table th.today { background: var(--paper); }
-    .calendar-table th.today .th-date { color: var(--rust); }
-
-    .calendar-table th.off-day {
-      background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 3px,
-        var(--rule) 3px,
-        var(--rule) 4px
-      );
-    }
-
-    .calendar-table td {
-      vertical-align: top;
-      padding: 0.5rem;
-      border-right: 1px solid var(--rule);
-      min-height: 300px;
-      width: calc(100% / 7);
-    }
-
-    .calendar-table td:last-child { border-right: none; }
-
-    .cal-session {
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      border-left: 3px solid;
-      background: var(--paper);
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .cal-session:hover { transform: translateX(3px); }
-
-    .cal-session.learn { border-color: var(--rust); }
-    .cal-session.review { border-color: var(--navy); }
-    .cal-session.practice { border-color: var(--olive); }
-    .cal-session.extramural { border-color: var(--gold); }
-
-    .cal-session .cal-time {
-      font-family: var(--sans);
-      font-size: 0.6rem;
-      color: var(--ink-faint);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .cal-session .cal-title {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: 0.82rem;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--gray-2);
+      letter-spacing: 0.1em;
       margin-top: 0.15rem;
     }
 
-    .cal-session .cal-type {
-      font-family: var(--sans);
-      font-size: 0.55rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-top: 0.25rem;
-      font-weight: 600;
+    .week-nav { display: flex; gap: 0; }
+
+    .week-nav button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gray-4);
+      background: var(--white);
+      font-family: var(--display);
+      font-size: 1.1rem;
+      color: var(--black);
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .cal-session.learn .cal-type { color: var(--rust); }
-    .cal-session.review .cal-type { color: var(--navy); }
-    .cal-session.practice .cal-type { color: var(--olive); }
+    .week-nav button:first-child { border-right: none; }
+    .week-nav button:hover { background: var(--black); color: white; }
+
+    /* Calendar Grid – Swiss grid */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+      border: 2px solid var(--black);
+    }
+
+    .cal-col {
+      border-right: 1px solid var(--gray-4);
+      min-height: 360px;
+    }
+
+    .cal-col:last-child { border-right: none; }
+
+    .cal-head {
+      padding: 0.5rem;
+      border-bottom: 2px solid var(--black);
+      background: var(--white);
+    }
+
+    .cal-head .ch-day {
+      font-family: var(--display);
+      font-size: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--gray-3);
+      font-weight: 700;
+    }
+
+    .cal-head .ch-num {
+      font-family: var(--display);
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .cal-head.today { background: var(--red-dim); }
+    .cal-head.today .ch-num { color: var(--red); }
+
+    .cal-head.off {
+      background: repeating-linear-gradient(
+        45deg, var(--bg), var(--bg) 4px, var(--gray-5) 4px, var(--gray-5) 5px
+      );
+    }
+
+    .cal-body { padding: 0.35rem; }
+
+    .sess {
+      padding: 0.45rem 0.5rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 4px solid;
+    }
+
+    .sess:hover { transform: translateX(3px); }
+
+    .sess.learn { border-color: var(--red); background: var(--red-dim); }
+    .sess.review { border-color: var(--black); background: rgba(0,0,0,0.04); }
+    .sess.practice { border-color: var(--gray-2); background: rgba(0,0,0,0.03); }
+    .sess.extramural { border-color: var(--gray-4); background: rgba(0,0,0,0.02); }
+
+    .sess .s-time {
+      font-family: var(--display);
+      font-size: 0.55rem;
+      color: var(--gray-3);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .sess .s-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      margin-top: 0.05rem;
+    }
+
+    .sess .s-type {
+      font-family: var(--display);
+      font-size: 0.45rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 800;
+      margin-top: 0.15rem;
+    }
+
+    .sess.learn .s-type { color: var(--red); }
+    .sess.review .s-type { color: var(--black); }
+    .sess.practice .s-type { color: var(--gray-2); }
 
     .off-placeholder {
-      height: 250px;
+      height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--serif);
-      font-style: italic;
-      color: var(--ink-faint);
+      font-family: var(--display);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--gray-4);
     }
 
-    /* Right Column – Stats */
-    .stat-block {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--rule);
+    /* Right Column */
+    .stat-swiss {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--gray-5);
     }
 
-    .stat-number {
-      font-family: var(--serif);
-      font-size: 3rem;
+    .stat-swiss .stat-num {
+      font-family: var(--display);
+      font-size: 3.5rem;
       font-weight: 900;
       line-height: 1;
-      color: var(--rust);
     }
 
-    .stat-number small {
-      font-size: 1rem;
+    .stat-swiss .stat-num.red { color: var(--red); }
+
+    .stat-swiss .stat-num small {
+      font-size: 1.2rem;
       font-weight: 400;
-      color: var(--ink-light);
+      color: var(--gray-3);
     }
 
-    .stat-caption {
-      font-family: var(--sans);
-      font-size: 0.7rem;
+    .stat-swiss .stat-cap {
+      font-family: var(--display);
+      font-size: 0.6rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--ink-light);
-      margin-top: 0.25rem;
+      letter-spacing: 0.15em;
+      color: var(--gray-2);
+      margin-top: 0.2rem;
     }
 
-    /* Progress in editorial style */
-    .progress-ed {
-      margin-bottom: 0.75rem;
-    }
+    .prog-swiss { margin-bottom: 0.85rem; }
 
-    .progress-ed .prog-label {
+    .prog-swiss .ps-label {
       display: flex;
       justify-content: space-between;
-      font-family: var(--sans);
-      font-size: 0.75rem;
+      font-family: var(--display);
+      font-size: 0.72rem;
+      font-weight: 600;
       margin-bottom: 0.3rem;
     }
 
-    .progress-ed .prog-label span:first-child { font-weight: 600; }
-    .progress-ed .prog-label span:last-child { color: var(--ink-light); }
+    .prog-swiss .ps-label span:last-child { color: var(--gray-3); }
 
-    .prog-track {
-      height: 4px;
-      background: var(--rule);
-    }
+    .ps-track { height: 6px; background: var(--gray-5); }
+    .ps-fill { height: 100%; }
+    .ps-fill.red { background: var(--red); }
+    .ps-fill.black { background: var(--black); }
+    .ps-fill.gray { background: var(--gray-2); }
+    .ps-fill.light { background: var(--gray-3); }
 
-    .prog-fill { height: 100%; transition: width 0.8s; }
-    .prog-fill.rust { background: var(--rust); }
-    .prog-fill.navy { background: var(--navy); }
-    .prog-fill.olive { background: var(--olive); }
-    .prog-fill.burgundy { background: var(--burgundy); }
-
-    /* Today's column */
-    .today-col {
-      background: var(--paper);
-      padding: 1.25rem;
-      border: 1px solid var(--rule);
+    /* Today */
+    .today-block {
+      border: 2px solid var(--red);
+      padding: 1rem;
       margin-top: 1rem;
     }
 
-    .today-col h4 {
-      font-family: var(--serif);
-      font-size: 1.1rem;
-      font-weight: 700;
+    .today-block h4 {
+      font-family: var(--display);
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
       margin-bottom: 0.75rem;
     }
 
     .today-item {
       display: flex;
-      gap: 0.75rem;
-      padding: 0.6rem 0;
-      border-top: 1px dotted var(--rule);
-      font-size: 0.85rem;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      border-top: 1px solid var(--gray-5);
+      font-size: 0.82rem;
       align-items: flex-start;
     }
 
@@ -495,311 +469,230 @@
     .today-check {
       width: 14px;
       height: 14px;
-      border: 1.5px solid var(--ink);
+      border: 2px solid var(--gray-4);
       flex-shrink: 0;
       margin-top: 2px;
     }
 
-    .today-check.done {
-      background: var(--olive);
-      border-color: var(--olive);
-      position: relative;
-    }
-
-    .today-check.done::after {
-      content: '✓';
-      position: absolute;
-      color: white;
-      font-size: 0.6rem;
-      top: -1px;
-      left: 1.5px;
-    }
+    .today-check.done { background: var(--red); border-color: var(--red); }
 
     .today-time {
-      font-family: var(--sans);
-      font-size: 0.7rem;
-      color: var(--ink-faint);
+      font-family: var(--display);
+      font-size: 0.6rem;
+      color: var(--gray-3);
+      font-weight: 600;
     }
 
-    .add-test-btn {
+    .today-title {
+      font-family: var(--display);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .add-btn {
       width: 100%;
-      padding: 0.75rem;
-      margin-top: 1.25rem;
-      border: 1px solid var(--ink);
+      padding: 0.8rem;
+      margin-top: 1rem;
+      border: 2px solid var(--black);
       background: none;
-      font-family: var(--sans);
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-family: var(--display);
+      font-size: 0.7rem;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.15em;
-      color: var(--ink);
+      color: var(--black);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
-    .add-test-btn:hover {
-      background: var(--ink);
-      color: var(--bg);
-    }
+    .add-btn:hover { background: var(--red); color: white; border-color: var(--red); }
 
     @media (max-width: 1100px) {
       .main-layout { grid-template-columns: 1fr; }
-      .col-left, .col-right { border: none; border-bottom: 1px solid var(--rule); }
-      .calendar-table { display: block; overflow-x: auto; }
+      .col-left, .col-right { border: none; border-bottom: 1px solid var(--gray-4); }
     }
   </style>
 </head>
 <body>
   <nav class="design-nav">
-    <a href="index.html">← All Options</a>
-    <a href="option1.html">01 Neo-Brutalist</a>
-    <a href="option2.html">02 Glass Aurora</a>
-    <a href="option3.html" class="active">03 Editorial Ink</a>
-    <a href="option4.html">04 Organic Growth</a>
-    <a href="option5.html">05 Retro Terminal</a>
+    <a href="index.html">← All Concepts</a>
+    <a href="option1.html">I Warm Broadsheet</a>
+    <a href="option2.html">II Dark Academia</a>
+    <a href="option3.html" class="active">III Swiss Precision</a>
+    <a href="option4.html">IV Quiet Journal</a>
+    <a href="option5.html">V Vintage Press</a>
   </nav>
 
-  <header class="masthead">
-    <div class="masthead-date">Tuesday, April 7, 2026</div>
-    <h1>The Study Planner</h1>
-    <div class="masthead-rule"><span>Knowledge Through Discipline</span></div>
-  </header>
+  <div class="top-bar">
+    <h1>Study<span>Plan</span></h1>
+    <div class="top-meta">
+      <div class="date">Tuesday, April 7, 2026</div>
+      <div class="edition">Week 15 · Vol. I</div>
+    </div>
+  </div>
 
-  <nav class="ed-nav">
+  <nav class="swiss-nav">
     <a href="#" class="active">Calendar</a>
-    <a href="#">Examinations</a>
+    <a href="#">Tests</a>
     <a href="#">Subjects</a>
     <a href="#">Reports</a>
-    <a href="#">Preferences</a>
+    <a href="#">Settings</a>
   </nav>
 
   <div class="main-layout">
-    <!-- Left Column -->
     <aside class="col-left">
-      <div class="section-head">Departments</div>
+      <div class="section-head">Subjects</div>
       <ul class="subject-list">
-        <li class="subject-item"><span class="subject-marker math"></span> Mathematics</li>
-        <li class="subject-item"><span class="subject-marker science"></span> Physical Science</li>
-        <li class="subject-item"><span class="subject-marker english"></span> English</li>
-        <li class="subject-item"><span class="subject-marker history"></span> History</li>
-        <li class="subject-item"><span class="subject-marker geo"></span> Geography</li>
+        <li class="subject-item"><span class="s-marker math"></span> Mathematics</li>
+        <li class="subject-item"><span class="s-marker science"></span> Physical Science</li>
+        <li class="subject-item"><span class="s-marker english"></span> English</li>
+        <li class="subject-item"><span class="s-marker history"></span> History</li>
+        <li class="subject-item"><span class="s-marker geo"></span> Geography</li>
       </ul>
 
-      <div class="section-head">Forthcoming Examinations</div>
-
-      <div class="test-entry">
-        <div class="overline rust">Mathematics</div>
-        <div class="headline">Algebra & Functions</div>
-        <div class="deck">April 14 — 8 days remaining</div>
-        <div class="diff-bar">
-          <span class="filled"></span><span class="filled"></span><span class="filled"></span>
-          <span class="filled"></span><span class="filled"></span><span class="filled"></span>
-          <span class="filled"></span><span></span><span></span><span></span>
+      <div class="section-head">Upcoming</div>
+      <div class="test-box math">
+        <div class="test-box-head">Mathematics</div>
+        <div class="test-box-body">
+          <div class="tb-name">Algebra & Functions</div>
+          <div class="tb-date">April 14 · 8 days</div>
+          <div class="diff-blocks">
+            <span class="filled"></span><span class="filled"></span><span class="filled"></span>
+            <span class="filled"></span><span class="filled"></span><span class="filled"></span>
+            <span class="filled"></span><span></span><span></span><span></span>
+          </div>
         </div>
       </div>
-
-      <div class="test-entry">
-        <div class="overline navy">Physical Science</div>
-        <div class="headline">Chemical Reactions</div>
-        <div class="deck">April 17 — 11 days remaining</div>
-        <div class="diff-bar">
-          <span class="filled"></span><span class="filled"></span><span class="filled"></span>
-          <span class="filled"></span><span class="filled"></span><span></span>
-          <span></span><span></span><span></span><span></span>
+      <div class="test-box science">
+        <div class="test-box-head">Physical Science</div>
+        <div class="test-box-body">
+          <div class="tb-name">Chemical Reactions</div>
+          <div class="tb-date">April 17 · 11 days</div>
+          <div class="diff-blocks">
+            <span class="filled"></span><span class="filled"></span><span class="filled"></span>
+            <span class="filled"></span><span class="filled"></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
         </div>
       </div>
-
-      <div class="test-entry">
-        <div class="overline olive">English</div>
-        <div class="headline">Poetry Analysis</div>
-        <div class="deck">April 20 — 14 days remaining</div>
-        <div class="diff-bar">
-          <span class="filled"></span><span class="filled"></span><span class="filled"></span>
-          <span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
+      <div class="test-box english">
+        <div class="test-box-head">English</div>
+        <div class="test-box-body">
+          <div class="tb-name">Poetry Analysis</div>
+          <div class="tb-date">April 20 · 14 days</div>
+          <div class="diff-blocks">
+            <span class="filled"></span><span class="filled"></span><span class="filled"></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
         </div>
       </div>
     </aside>
 
-    <!-- Main Column -->
     <main class="col-main">
       <div class="week-header">
-        <div>
-          <h2>Week Fifteen</h2>
-          <span class="week-range">April 6 – 12, 2026</span>
-        </div>
-        <div class="week-nav">
-          <button>‹</button>
-          <button>›</button>
-        </div>
+        <h2>Week 15<span>April 6 – 12, 2026</span></h2>
+        <div class="week-nav"><button>‹</button><button>›</button></div>
       </div>
 
-      <table class="calendar-table">
-        <thead>
-          <tr>
-            <th>Mon <span class="th-date">6</span></th>
-            <th class="today">Tue <span class="th-date">7</span></th>
-            <th>Wed <span class="th-date">8</span></th>
-            <th>Thu <span class="th-date">9</span></th>
-            <th>Fri <span class="th-date">10</span></th>
-            <th>Sat <span class="th-date">11</span></th>
-            <th class="off-day">Sun <span class="th-date">12</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="cal-session learn">
-                <div class="cal-time">15:30</div>
-                <div class="cal-title">Algebra Ch.4</div>
-                <div class="cal-type">New Learning</div>
-              </div>
-              <div class="cal-session review">
-                <div class="cal-time">16:05</div>
-                <div class="cal-title">Chem Reactions</div>
-                <div class="cal-type">Review</div>
-              </div>
-              <div class="cal-session extramural">
-                <div class="cal-time">17:00</div>
-                <div class="cal-title">⚽ Soccer</div>
-              </div>
-            </td>
-            <td style="background:var(--paper);">
-              <div class="cal-session learn">
-                <div class="cal-time">15:30</div>
-                <div class="cal-title">Functions</div>
-                <div class="cal-type">New Learning</div>
-              </div>
-              <div class="cal-session learn">
-                <div class="cal-time">16:05</div>
-                <div class="cal-title">Poetry Terms</div>
-                <div class="cal-type">New Learning</div>
-              </div>
-              <div class="cal-session review">
-                <div class="cal-time">16:40</div>
-                <div class="cal-title">Algebra Ch.4</div>
-                <div class="cal-type">Day 2 Review</div>
-              </div>
-            </td>
-            <td>
-              <div class="cal-session review">
-                <div class="cal-time">15:30</div>
-                <div class="cal-title">Chem Reactions</div>
-                <div class="cal-type">Day 4 Review</div>
-              </div>
-              <div class="cal-session learn">
-                <div class="cal-time">16:05</div>
-                <div class="cal-title">History: WW2</div>
-                <div class="cal-type">New Learning</div>
-              </div>
-            </td>
-            <td>
-              <div class="cal-session review">
-                <div class="cal-time">15:30</div>
-                <div class="cal-title">Algebra Ch.4</div>
-                <div class="cal-type">Day 4 Review</div>
-              </div>
-              <div class="cal-session learn">
-                <div class="cal-time">16:05</div>
-                <div class="cal-title">Functions Pt.2</div>
-                <div class="cal-type">New Learning</div>
-              </div>
-              <div class="cal-session extramural">
-                <div class="cal-time">17:00</div>
-                <div class="cal-title">⚽ Match</div>
-              </div>
-            </td>
-            <td>
-              <div class="cal-session practice">
-                <div class="cal-time">15:30</div>
-                <div class="cal-title">Algebra Mock</div>
-                <div class="cal-type">Practice Test</div>
-              </div>
-              <div class="cal-session review">
-                <div class="cal-time">16:05</div>
-                <div class="cal-title">Poetry</div>
-                <div class="cal-type">Review</div>
-              </div>
-            </td>
-            <td>
-              <div class="cal-session learn">
-                <div class="cal-time">10:00</div>
-                <div class="cal-title">Chem Equations</div>
-                <div class="cal-type">New Learning</div>
-              </div>
-              <div class="cal-session review">
-                <div class="cal-time">10:35</div>
-                <div class="cal-title">History: WW2</div>
-                <div class="cal-type">Day 2 Review</div>
-              </div>
-            </td>
-            <td>
-              <div class="off-placeholder">— Rest —</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="cal-grid">
+        <div class="cal-col">
+          <div class="cal-head"><div class="ch-day">Mon</div><div class="ch-num">06</div></div>
+          <div class="cal-body">
+            <div class="sess learn"><div class="s-time">15:30</div><div class="s-title">Algebra Ch.4</div><div class="s-type">Learn</div></div>
+            <div class="sess review"><div class="s-time">16:05</div><div class="s-title">Chem React.</div><div class="s-type">Review</div></div>
+            <div class="sess extramural"><div class="s-time">17:00</div><div class="s-title">⚽ Soccer</div></div>
+          </div>
+        </div>
+        <div class="cal-col">
+          <div class="cal-head today"><div class="ch-day">Tue</div><div class="ch-num">07</div></div>
+          <div class="cal-body">
+            <div class="sess learn"><div class="s-time">15:30</div><div class="s-title">Functions</div><div class="s-type">Learn</div></div>
+            <div class="sess learn"><div class="s-time">16:05</div><div class="s-title">Poetry Terms</div><div class="s-type">Learn</div></div>
+            <div class="sess review"><div class="s-time">16:40</div><div class="s-title">Algebra Ch.4</div><div class="s-type">Day 2</div></div>
+          </div>
+        </div>
+        <div class="cal-col">
+          <div class="cal-head"><div class="ch-day">Wed</div><div class="ch-num">08</div></div>
+          <div class="cal-body">
+            <div class="sess review"><div class="s-time">15:30</div><div class="s-title">Chem React.</div><div class="s-type">Day 4</div></div>
+            <div class="sess learn"><div class="s-time">16:05</div><div class="s-title">History WW2</div><div class="s-type">Learn</div></div>
+          </div>
+        </div>
+        <div class="cal-col">
+          <div class="cal-head"><div class="ch-day">Thu</div><div class="ch-num">09</div></div>
+          <div class="cal-body">
+            <div class="sess review"><div class="s-time">15:30</div><div class="s-title">Algebra Ch.4</div><div class="s-type">Day 4</div></div>
+            <div class="sess learn"><div class="s-time">16:05</div><div class="s-title">Functions.2</div><div class="s-type">Learn</div></div>
+            <div class="sess extramural"><div class="s-time">17:00</div><div class="s-title">⚽ Match</div></div>
+          </div>
+        </div>
+        <div class="cal-col">
+          <div class="cal-head"><div class="ch-day">Fri</div><div class="ch-num">10</div></div>
+          <div class="cal-body">
+            <div class="sess practice"><div class="s-time">15:30</div><div class="s-title">Algebra Mock</div><div class="s-type">Practice</div></div>
+            <div class="sess review"><div class="s-time">16:05</div><div class="s-title">Poetry</div><div class="s-type">Review</div></div>
+          </div>
+        </div>
+        <div class="cal-col">
+          <div class="cal-head"><div class="ch-day">Sat</div><div class="ch-num">11</div></div>
+          <div class="cal-body">
+            <div class="sess learn"><div class="s-time">10:00</div><div class="s-title">Chem Eqns</div><div class="s-type">Learn</div></div>
+            <div class="sess review"><div class="s-time">10:35</div><div class="s-title">History WW2</div><div class="s-type">Day 2</div></div>
+          </div>
+        </div>
+        <div class="cal-col">
+          <div class="cal-head off"><div class="ch-day">Sun</div><div class="ch-num">12</div></div>
+          <div class="cal-body"><div class="off-placeholder">Rest Day</div></div>
+        </div>
+      </div>
     </main>
 
-    <!-- Right Column -->
     <aside class="col-right">
-      <div class="section-head">Weekly Figures</div>
-
-      <div class="stat-block">
-        <div class="stat-number">14<small>/18</small></div>
-        <div class="stat-caption">Sessions Completed</div>
+      <div class="section-head">Data</div>
+      <div class="stat-swiss">
+        <div class="stat-num red">14<small>/18</small></div>
+        <div class="stat-cap">Sessions Completed</div>
+      </div>
+      <div class="stat-swiss">
+        <div class="stat-num">78<small>%</small></div>
+        <div class="stat-cap">Efficiency (↑5%)</div>
       </div>
 
-      <div class="stat-block">
-        <div class="stat-number">78%</div>
-        <div class="stat-caption">Completion Rate (↑5%)</div>
+      <div class="section-head">Progress</div>
+      <div class="prog-swiss">
+        <div class="ps-label"><span>Mathematics</span><span>65%</span></div>
+        <div class="ps-track"><div class="ps-fill red" style="width:65%"></div></div>
+      </div>
+      <div class="prog-swiss">
+        <div class="ps-label"><span>Phys. Science</span><span>40%</span></div>
+        <div class="ps-track"><div class="ps-fill black" style="width:40%"></div></div>
+      </div>
+      <div class="prog-swiss">
+        <div class="ps-label"><span>English</span><span>25%</span></div>
+        <div class="ps-track"><div class="ps-fill gray" style="width:25%"></div></div>
+      </div>
+      <div class="prog-swiss">
+        <div class="ps-label"><span>History</span><span>10%</span></div>
+        <div class="ps-track"><div class="ps-fill light" style="width:10%"></div></div>
       </div>
 
-      <div class="section-head">Subject Standing</div>
-
-      <div class="progress-ed">
-        <div class="prog-label"><span>Mathematics</span><span>65%</span></div>
-        <div class="prog-track"><div class="prog-fill rust" style="width:65%"></div></div>
-      </div>
-      <div class="progress-ed">
-        <div class="prog-label"><span>Physical Science</span><span>40%</span></div>
-        <div class="prog-track"><div class="prog-fill navy" style="width:40%"></div></div>
-      </div>
-      <div class="progress-ed">
-        <div class="prog-label"><span>English</span><span>25%</span></div>
-        <div class="prog-track"><div class="prog-fill olive" style="width:25%"></div></div>
-      </div>
-      <div class="progress-ed">
-        <div class="prog-label"><span>History</span><span>10%</span></div>
-        <div class="prog-track"><div class="prog-fill burgundy" style="width:10%"></div></div>
-      </div>
-
-      <div class="today-col">
-        <h4>Today's Edition</h4>
+      <div class="today-block">
+        <h4>Today's Schedule</h4>
         <div class="today-item">
           <div class="today-check done"></div>
-          <div>
-            <div class="today-time">15:30</div>
-            <div>Functions — New Learning</div>
-          </div>
+          <div><div class="today-time">15:30</div><div class="today-title">Functions – Learn</div></div>
         </div>
         <div class="today-item">
           <div class="today-check"></div>
-          <div>
-            <div class="today-time">16:05</div>
-            <div>Poetry Terms — New Learning</div>
-          </div>
+          <div><div class="today-time">16:05</div><div class="today-title">Poetry Terms – Learn</div></div>
         </div>
         <div class="today-item">
           <div class="today-check"></div>
-          <div>
-            <div class="today-time">16:40</div>
-            <div>Algebra Ch.4 — Day 2 Review</div>
-          </div>
+          <div><div class="today-time">16:40</div><div class="today-title">Algebra Ch.4 – Day 2</div></div>
         </div>
       </div>
-
-      <button class="add-test-btn">+ Schedule Examination</button>
+      <button class="add-btn">+ Add Test</button>
     </aside>
   </div>
 </body>
