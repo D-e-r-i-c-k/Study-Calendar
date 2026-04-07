@@ -2,12 +2,16 @@ interface WeekHeaderProps {
   weekNumber: number;
   startDate: string;
   endDate: string;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
 export default function WeekHeader({
   weekNumber,
   startDate,
   endDate,
+  onPrev,
+  onNext,
 }: WeekHeaderProps) {
   const words = [
     "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
@@ -37,10 +41,16 @@ export default function WeekHeader({
         </span>
       </div>
       <div className="flex gap-2">
-        <button className="w-8 h-8 border border-ed-rule bg-transparent font-display text-base text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg">
+        <button 
+          onClick={onPrev}
+          className="w-8 h-8 border border-ed-rule bg-transparent font-display text-base text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg"
+        >
           ‹
         </button>
-        <button className="w-8 h-8 border border-ed-rule bg-transparent font-display text-base text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg">
+        <button 
+          onClick={onNext}
+          className="w-8 h-8 border border-ed-rule bg-transparent font-display text-base text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg"
+        >
           ›
         </button>
       </div>

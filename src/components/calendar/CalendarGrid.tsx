@@ -3,22 +3,26 @@ import WeekHeader from "./WeekHeader";
 import DayColumn from "./DayColumn";
 
 interface CalendarGridProps {
-  week: WeekSchedule;
+  week: any;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
-export default function CalendarGrid({ week }: CalendarGridProps) {
+export default function CalendarGrid({ week, onPrev, onNext }: CalendarGridProps) {
   return (
     <div>
       <WeekHeader
         weekNumber={week.weekNumber}
         startDate={week.startDate}
         endDate={week.endDate}
+        onPrev={onPrev}
+        onNext={onNext}
       />
       <div className="overflow-x-auto mt-4">
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              {week.days.map((day) => (
+              {week.days.map((day: any) => (
                 <th
                   key={day.date}
                   className={`
@@ -46,7 +50,7 @@ export default function CalendarGrid({ week }: CalendarGridProps) {
           </thead>
           <tbody>
             <tr>
-              {week.days.map((day) => (
+              {week.days.map((day: any) => (
                 <DayColumn key={day.date} day={day} />
               ))}
             </tr>

@@ -1,0 +1,137 @@
+"use client";
+
+import { useState } from "react";
+import { addWeeks, subWeeks, startOfWeek, addDays, isSameDay, getWeek } from "date-fns";
+import type { CalendarState, ViewMode, TimeMode } from "@/lib/calendar-types";
+import CalendarGrid from "./CalendarGrid";
+import MonthGrid from "./MonthGrid";
+import DayTimeline from "./DayTimeline";
+
+interface CalendarManagerProps {
+  initialDate: Date;
+  sessions: any[]; // Using any for now to map from Prisma
+  extramurals: any[];
+}
+
+export default function CalendarManager({
+  initialDate,
+  sessions,
+  extramurals,
+}: CalendarManagerProps) {
+  const [state, setState] = useState<CalendarState>({
+    currentDate: initialDate,
+    viewMode: "week",
+    timeMode: "condensed",
+  });
+
+  const handlePrevWeek = () => {
+    setState((s) => ({ ...s, currentDate: subWeeks(s.currentDate, 1) }));
+  };
+
+  const handleNextWeek = () => {
+    setState((s) => ({ ...s, currentDate: addWeeks(s.currentDate, 1) }));
+  };
+
+  // Compute Week Schedule dynamically
+  const buildWeekSchedule = () => {
+    const weekStart = startOfWeek(state.currentDate, { weekStartsOn: 0 }); // 0 = Sunday
+    const weekEnd = addDays(weekStart, 6);
+    
+    // Calculate week number dynamically based on the current date
+    const weekNumber = getWeek(state.currentDate, { weekStartsOn: 0 }); 
+    
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const today = new Date();
+
+    const days = Array.from({ length: 7 }).map((_, i) => {
+      const date = addDays(weekStart, i);
+      const isToday = isSameDay(date, today);
+      const dateStr = date.toISOString().split("T")[0];
+      const dayOfWeek = date.getDay();
+
+      // Find sessions for this specific date
+      const daySessions = sessions.filter(s => {
+        const sDate = new Date(s.date);
+        return isSameDay(sDate, date);
+      });
+
+      // Extramurals repeat weekly for now
+      const dayExtramurals = extramurals.filter(e => e.dayOfWeek === dayOfWeek);
+
+      return {
+        date: dateStr,
+        dayName: dayNames[dayOfWeek],
+        dayNumber: date.getDate(),
+        isToday,
+        isOffDay: dayOfWeek === 0, // Mock: Sunday is off day
+        sessions: daySessions,
+        extramurals: dayExtramurals,
+      };
+    });
+
+    return {
+      weekNumber,
+      startDate: weekStart.toISOString(),
+      endDate: weekEnd.toISOString(),
+      days,
+    };
+  };
+
+  const weekData = buildWeekSchedule();
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6 px-2">
+        <div className="flex gap-4">
+          <button 
+            className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "week" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
+            onClick={() => setState(s => ({ ...s, viewMode: "week" }))}
+          >
+            Week
+          </button>
+          <button 
+            className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "month" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
+            onClick={() => setState(s => ({ ...s, viewMode: "month" }))}
+          >
+            Ledger
+          </button>
+          <button 
+            className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "day" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
+            onClick={() => setState(s => ({ ...s, viewMode: "day" }))}
+          >
+            Itinerary
+          </button>
+        </div>
+      </div>
+
+      <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+        {state.viewMode === "week" && (
+          <CalendarGrid 
+            week={weekData} 
+            onPrev={handlePrevWeek} 
+            onNext={handleNextWeek} 
+          />
+        )}
+        
+        {state.viewMode === "month" && (
+          <MonthGrid 
+             currentDate={state.currentDate}
+             sessions={sessions}
+             extramurals={extramurals}
+             onChangeDate={(d: Date) => setState((s) => ({ ...s, currentDate: d, viewMode: "week" }))}
+          />
+        )}
+
+        {state.viewMode === "day" && (
+           <DayTimeline 
+             currentDate={state.currentDate}
+             sessions={sessions}
+             extramurals={extramurals}
+             onPrev={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, -1) }))}
+             onNext={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, 1) }))}
+           />
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,13 +1,68 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  grade         String?
+  curriculum    String?
+  school        String?
+  schoolEndTime String?
+  arrivalHome   String?
+  studyEndTime  String?
+  dailyBuffer   Int?
+  offDay        Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subjects    Subject[]
+  extramurals Extramural[]
+}
+
+model Subject {
+  id     String @id @default(cuid())
+  userId String
+  name   String
+  color  String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tests  Test[]
+}
+
+model Extramural {
+  id        String @id @default(cuid())
+  userId    String
+  name      String
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  emoji     String?
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Test {
+  id         String         @id @default(cuid())
+  subjectId  String
+  name       String
+  date       DateTime
+  difficulty Int
+  prepDays   Int
+  subject    Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  sessions   StudySession[]
+}
+
+model StudySession {
+  id        String   @id @default(cuid())
+  testId    String
+  date      DateTime
+  startTime String
+  duration  Int
+  type      String
+  completed Boolean  @default(false)
+  test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
 }
