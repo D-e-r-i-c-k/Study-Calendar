@@ -72,6 +72,7 @@ export interface UserProfile {
   studyEndTime: string;
   dailyBuffer: number; // minutes
   offDay: number; // 0=Sun, 6=Sat
+  timezone?: string;
 }
 
 export interface SubjectProgress {

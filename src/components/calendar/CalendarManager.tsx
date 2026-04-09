@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addWeeks, subWeeks, addMonths, subMonths, startOfWeek, addDays, isSameDay, getWeek } from "date-fns";
 import type { CalendarState, ViewMode, TimeMode } from "@/lib/calendar-types";
 import CalendarGrid from "./CalendarGrid";
@@ -25,6 +25,19 @@ export default function CalendarManager({
     viewMode: "month",
     timeMode: "condensed",
   });
+
+  // Client-side Hydration for persistent viewMode
+  useEffect(() => {
+    const saved = localStorage.getItem("studyCalendarView") as ViewMode;
+    if (saved) {
+      setState(s => ({ ...s, viewMode: saved }));
+    }
+  }, []);
+
+  const changeViewMode = (mode: ViewMode) => {
+    setState(s => ({ ...s, viewMode: mode }));
+    localStorage.setItem("studyCalendarView", mode);
+  };
 
   const handlePrev = () => {
     if (state.viewMode === "month") {
@@ -98,19 +111,19 @@ export default function CalendarManager({
         <div className="flex gap-4">
           <button 
             className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "week" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
-            onClick={() => setState(s => ({ ...s, viewMode: "week" }))}
+            onClick={() => changeViewMode("week")}
           >
             Week
           </button>
           <button 
             className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "month" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
-            onClick={() => setState(s => ({ ...s, viewMode: "month" }))}
+            onClick={() => changeViewMode("month")}
           >
             Ledger
           </button>
           <button 
             className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "day" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
-            onClick={() => setState(s => ({ ...s, viewMode: "day" }))}
+            onClick={() => changeViewMode("day")}
           >
             Itinerary
           </button>

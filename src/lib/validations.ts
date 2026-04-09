@@ -21,6 +21,17 @@ export const examinationSchema = z.object({
 
 export type ExaminationInput = z.infer<typeof examinationSchema>;
 
+// --- Extramural Validations ---
+export const extramuralSchema = z.object({
+  name: z.string().min(2, "Name must be descriptive."),
+  days: z.array(z.number()).min(1, "Select at least one day."),
+  startTime: z.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/, "Invalid time structure."),
+  endTime: z.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/, "Invalid time structure."),
+  emoji: z.string().optional(),
+});
+
+export type ExtramuralInput = z.infer<typeof extramuralSchema>;
+
 // --- Onboarding / Academic Profile Validations ---
 export const profileSchema = z.object({
   grade: z.string().min(1, "Grade is required."),
@@ -30,6 +41,7 @@ export const profileSchema = z.object({
   studyEndTime: z.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/, "Invalid time structure."),
   dailyBuffer: z.number().min(0).max(120),
   offDay: z.number().min(0).max(6),
+  timezone: z.string().optional(),
 });
 
 export type ProfileInput = z.infer<typeof profileSchema>;

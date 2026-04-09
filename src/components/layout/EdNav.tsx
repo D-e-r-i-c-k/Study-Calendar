@@ -10,6 +10,7 @@ export default function EdNav() {
     { name: "CALENDAR", path: "/" },
     { name: "EXAMINATIONS", path: "/examinations" },
     { name: "SUBJECTS", path: "/subjects" },
+    { name: "AVAILABILITY", path: "/availability" },
     { name: "PREFERENCES", path: "/onboarding" },
   ];
 

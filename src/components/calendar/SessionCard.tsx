@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { toggleSessionCompletion } from "@/app/actions";
 import { Check } from "lucide-react";
 import type { StudySession } from "@/lib/types";
@@ -32,12 +32,25 @@ import { useRouter } from "next/navigation";
 export default function SessionCard({ session }: SessionCardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isCompleted, setIsCompleted] = useState(session.completed);
 
-  const handleToggle = () => {
+  // Sync back if server state changes drastically
+  useEffect(() => {
+    setIsCompleted(session.completed);
+  }, [session.completed]);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newState = !isCompleted;
+    setIsCompleted(newState); // Instant UI update
+
     startTransition(async () => {
-      // Optimistic update pattern can be added here
-      await toggleSessionCompletion(session.id, !session.completed);
-      router.refresh();
+      try {
+        await toggleSessionCompletion(session.id, newState);
+        router.refresh();
+      } catch (err) {
+        setIsCompleted(!newState); // Revert on failure
+      }
     });
   };
 
@@ -47,36 +60,31 @@ export default function SessionCard({ session }: SessionCardProps) {
       className={`
         p-2 mb-2 border-l-[3px] text-left cursor-pointer relative group
         transition-all duration-300 hover:translate-x-1
-        ${session.completed ? "bg-ed-bg opacity-60 grayscale border-l-ed-rule" : "bg-ed-paper"}
-        ${!session.completed ? (borderMap[session.type] || "border-l-ed-gold") : ""}
-        ${isPending ? "opacity-50" : ""}
+        ${isCompleted ? "bg-ed-bg opacity-40 grayscale border-l-ed-rule" : "bg-ed-paper"}
+        ${!isCompleted ? (borderMap[session.type] || "border-l-ed-gold") : ""}
       `}
     >
       <div className="flex justify-between items-start">
-        <p className={`font-ui text-[0.6rem] uppercase tracking-[0.05em] ${session.completed ? "text-ed-rule line-through" : "text-ed-ink-faint"}`}>
+        <p className={`font-ui text-[0.6rem] uppercase tracking-[0.05em] ${isCompleted ? "text-ed-rule line-through" : "text-ed-ink-faint"}`}>
           {session.startTime}
         </p>
-        {session.completed && <Check size={12} className="text-ed-ink-light" />}
+        <div className={`w-3.5 h-3.5 border flex items-center justify-center transition-colors ${isCompleted ? "bg-ed-ink border-ed-ink" : "border-ed-ink-light bg-transparent"}`}>
+          {isCompleted && <Check size={10} className="text-ed-bg" />}
+        </div>
       </div>
       
-      <p className={`font-display font-semibold text-sm mt-0.5 leading-tight ${session.completed ? "text-ed-ink-light line-through decoration-ed-rule decoration-2" : "text-ed-ink"}`}>
+      <p className={`font-display font-semibold text-sm mt-0.5 leading-tight ${isCompleted ? "text-ed-ink-light line-through decoration-ed-rule decoration-2" : "text-ed-ink"}`}>
         {session.test.name}
       </p>
       
       <p
         className={`font-ui text-[0.55rem] uppercase tracking-[0.1em] mt-1 font-semibold ${
-          session.completed ? "text-ed-ink-light" : (typeColorMap[session.type] || "text-ed-gold")
+          isCompleted ? "text-ed-ink-light" : (typeColorMap[session.type] || "text-ed-gold")
         }`}
       >
         {typeLabels[session.type] || session.type}
       </p>
 
-      {/* Hover reveal checkmark if not completed */}
-      {!session.completed && (
-        <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Check size={14} className="text-ed-ink" />
-        </div>
-      )}
     </div>
   );
 }

@@ -21,6 +21,7 @@ export async function ensureSeeded() {
       studyEndTime: "18:00",
       dailyBuffer: 30,
       offDay: 0, // Sunday
+      timezone: "UTC",
     },
   });
 
@@ -130,5 +131,38 @@ export async function updateUserProfile(data: any) {
   return await prisma.user.update({
     where: { id: user.id },
     data,
+  });
+}
+
+export async function createExtramural(data: {
+  name: string;
+  days: number[];
+  startTime: string;
+  endTime: string;
+  emoji?: string;
+}) {
+  const user = await prisma.user.findFirst();
+  if (!user) throw new Error("No primary user found.");
+
+  // Iterate array of days to generate dedicated recurring SQLite entries
+  const creations = data.days.map((dayOfWeek) => 
+    prisma.extramural.create({
+      data: {
+        userId: user.id,
+        name: data.name,
+        dayOfWeek,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        emoji: data.emoji || "📅",
+      }
+    })
+  );
+
+  return await Promise.all(creations);
+}
+
+export async function deleteExtramural(id: string) {
+  return await prisma.extramural.delete({
+    where: { id },
   });
 }
