@@ -89,3 +89,46 @@ export async function toggleSessionCompletion(sessionId: string, completed: bool
     data: { completed },
   });
 }
+
+// --- Management Mutations ---
+
+export async function createSubject(data: { name: string; color: string }) {
+  const user = await prisma.user.findFirst();
+  if (!user) throw new Error("No primary user found.");
+
+  return await prisma.subject.create({
+    data: {
+      userId: user.id,
+      name: data.name,
+      color: data.color,
+    },
+  });
+}
+
+export async function deleteSubject(id: string) {
+  return await prisma.subject.delete({
+    where: { id },
+  });
+}
+
+export async function createExamination(data: {
+  subjectId: string;
+  name: string;
+  date: Date;
+  difficulty: number;
+  prepDays: number;
+}) {
+  return await prisma.test.create({
+    data,
+  });
+}
+
+export async function updateUserProfile(data: any) {
+  const user = await prisma.user.findFirst();
+  if (!user) throw new Error("No primary user found.");
+
+  return await prisma.user.update({
+    where: { id: user.id },
+    data,
+  });
+}

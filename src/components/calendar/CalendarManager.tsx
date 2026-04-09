@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addWeeks, subWeeks, startOfWeek, addDays, isSameDay, getWeek } from "date-fns";
+import { addWeeks, subWeeks, addMonths, subMonths, startOfWeek, addDays, isSameDay, getWeek } from "date-fns";
 import type { CalendarState, ViewMode, TimeMode } from "@/lib/calendar-types";
 import CalendarGrid from "./CalendarGrid";
 import MonthGrid from "./MonthGrid";
@@ -11,25 +11,35 @@ interface CalendarManagerProps {
   initialDate: Date;
   sessions: any[]; // Using any for now to map from Prisma
   extramurals: any[];
+  tests: any[];
 }
 
 export default function CalendarManager({
   initialDate,
   sessions,
   extramurals,
+  tests,
 }: CalendarManagerProps) {
   const [state, setState] = useState<CalendarState>({
     currentDate: initialDate,
-    viewMode: "week",
+    viewMode: "month",
     timeMode: "condensed",
   });
 
-  const handlePrevWeek = () => {
-    setState((s) => ({ ...s, currentDate: subWeeks(s.currentDate, 1) }));
+  const handlePrev = () => {
+    if (state.viewMode === "month") {
+      setState((s) => ({ ...s, currentDate: subMonths(s.currentDate, 1) }));
+    } else {
+      setState((s) => ({ ...s, currentDate: subWeeks(s.currentDate, 1) }));
+    }
   };
 
-  const handleNextWeek = () => {
-    setState((s) => ({ ...s, currentDate: addWeeks(s.currentDate, 1) }));
+  const handleNext = () => {
+    if (state.viewMode === "month") {
+      setState((s) => ({ ...s, currentDate: addMonths(s.currentDate, 1) }));
+    } else {
+      setState((s) => ({ ...s, currentDate: addWeeks(s.currentDate, 1) }));
+    }
   };
 
   // Compute Week Schedule dynamically
@@ -55,6 +65,8 @@ export default function CalendarManager({
         return isSameDay(sDate, date);
       });
 
+      const dayTests = tests?.filter(t => isSameDay(new Date(t.date), date)) || [];
+
       // Extramurals repeat weekly for now
       const dayExtramurals = extramurals.filter(e => e.dayOfWeek === dayOfWeek);
 
@@ -66,6 +78,7 @@ export default function CalendarManager({
         isOffDay: dayOfWeek === 0, // Mock: Sunday is off day
         sessions: daySessions,
         extramurals: dayExtramurals,
+        tests: dayTests,
       };
     });
 
@@ -108,8 +121,9 @@ export default function CalendarManager({
         {state.viewMode === "week" && (
           <CalendarGrid 
             week={weekData} 
-            onPrev={handlePrevWeek} 
-            onNext={handleNextWeek} 
+            onPrev={handlePrev} 
+            onNext={handleNext} 
+            tests={tests}
           />
         )}
         
@@ -118,7 +132,10 @@ export default function CalendarManager({
              currentDate={state.currentDate}
              sessions={sessions}
              extramurals={extramurals}
+             tests={tests}
              onChangeDate={(d: Date) => setState((s) => ({ ...s, currentDate: d, viewMode: "week" }))}
+             onPrev={handlePrev}
+             onNext={handleNext}
           />
         )}
 

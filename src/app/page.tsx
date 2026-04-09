@@ -1,7 +1,5 @@
 import { prisma } from "@/lib/db";
 import { ensureSeeded } from "@/app/actions";
-import Masthead from "@/components/layout/Masthead";
-import EdNav from "@/components/layout/EdNav";
 import Sidebar from "@/components/layout/Sidebar";
 import RightPanel from "@/components/layout/RightPanel";
 import CalendarManager from "@/components/calendar/CalendarManager";
@@ -32,8 +30,6 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <Masthead />
-      <EdNav />
       <div className="grid grid-cols-1 xl:grid-cols-[250px_1fr_280px] max-w-[1400px] mx-auto min-h-[calc(100vh-180px)]">
         <Sidebar subjects={user.subjects as any} tests={tests as any} />
         <main className="p-6">
@@ -41,6 +37,7 @@ export default async function DashboardPage() {
             initialDate={new Date()}
             sessions={allSessions as any}
             extramurals={user.extramurals as any}
+            tests={tests as any}
           />
         </main>
         <RightPanel

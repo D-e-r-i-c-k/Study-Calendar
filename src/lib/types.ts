@@ -51,6 +51,7 @@ export interface DaySchedule {
   isOffDay: boolean;
   sessions: StudySession[];
   extramurals: Extramural[];
+  tests?: any[];
 }
 
 export interface WeekSchedule {

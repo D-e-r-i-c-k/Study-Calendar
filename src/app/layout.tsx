@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     "An intelligent study calendar that generates optimized schedules using spaced repetition, active recall, and interleaving.",
 };
 
+import Masthead from "@/components/layout/Masthead";
+import EdNav from "@/components/layout/EdNav";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,7 +36,11 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${sourceSerif.variable} ${libreFranklin.variable}`}
     >
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <Masthead />
+        <EdNav />
+        {children}
+      </body>
     </html>
   );
 }

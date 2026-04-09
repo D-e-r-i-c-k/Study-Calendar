@@ -3,38 +3,37 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
-  { href: "/", label: "Calendar" },
-  { href: "/tests", label: "Examinations" },
-  { href: "/subjects", label: "Subjects" },
-  { href: "/settings", label: "Preferences" },
-];
-
 export default function EdNav() {
   const pathname = usePathname();
 
+  const navLinks = [
+    { name: "CALENDAR", path: "/" },
+    { name: "EXAMINATIONS", path: "/examinations" },
+    { name: "SUBJECTS", path: "/subjects" },
+    { name: "PREFERENCES", path: "/onboarding" },
+  ];
+
   return (
-    <nav className="flex justify-center gap-8 py-3 px-8 border-b border-ed-rule">
-      {navItems.map((item) => {
-        const isActive = pathname === item.href;
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`
-              font-ui text-xs font-semibold uppercase tracking-[0.15em] 
-              py-1 border-b-2 transition-all duration-300
-              ${
-                isActive
-                  ? "text-ed-ink border-ed-rust"
-                  : "text-ed-ink-light border-transparent hover:text-ed-ink"
-              }
-            `}
-          >
-            {item.label}
-          </Link>
-        );
-      })}
+    <nav className="border-b-2 border-ed-ink py-4 bg-ed-paper sticky top-0 z-50">
+      <div className="max-w-6xl mx-auto px-8 flex justify-center space-x-12">
+        {navLinks.map((link) => {
+          const isActive = pathname === link.path;
+          return (
+            <Link 
+              key={link.name} 
+              href={link.path}
+              className={`font-ui text-[0.65rem] tracking-[0.2em] uppercase font-bold transition-all duration-300
+                ${isActive 
+                  ? "text-ed-ink border-b-2 border-ed-ink pb-1" 
+                  : "text-ed-ink-light hover:text-ed-ink hover:border-b-2 hover:border-ed-rule pb-1"
+                }
+              `}
+            >
+              {link.name}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

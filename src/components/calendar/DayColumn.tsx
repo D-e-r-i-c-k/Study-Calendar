@@ -18,6 +18,16 @@ export default function DayColumn({ day }: DayColumnProps) {
         </div>
       ) : (
         <>
+          {day.tests?.map((test: any) => (
+            <div key={`test-${test.id}`} className="mb-2 p-2 border-2 border-ed-rust bg-ed-rust/5 text-center">
+              <span className="block font-ui text-[0.6rem] uppercase tracking-widest text-ed-rust font-bold mb-1">
+                 Exam Today
+              </span>
+              <span className="font-display text-sm font-bold text-ed-ink leading-tight">
+                {test.name}
+              </span>
+            </div>
+          ))}
           {day.sessions.map((session) => (
             <SessionCard key={session.id} session={session} />
           ))}
