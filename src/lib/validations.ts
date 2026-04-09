@@ -41,7 +41,7 @@ export const profileSchema = z.object({
   studyEndTime: z.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/, "Invalid time structure."),
   dailyBuffer: z.number().min(0).max(120),
   offDay: z.number().min(0).max(6),
-  timezone: z.string().optional(),
+  tz: z.string().optional(),
 });
 
 export type ProfileInput = z.infer<typeof profileSchema>;

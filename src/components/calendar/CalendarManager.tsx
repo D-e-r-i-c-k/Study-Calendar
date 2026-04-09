@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { addWeeks, subWeeks, addMonths, subMonths, startOfWeek, addDays, isSameDay, getWeek } from "date-fns";
+import { addWeeks, subWeeks, addMonths, subMonths, startOfWeek, addDays, isSameDay, getWeek, format } from "date-fns";
 import type { CalendarState, ViewMode, TimeMode } from "@/lib/calendar-types";
 import CalendarGrid from "./CalendarGrid";
 import MonthGrid from "./MonthGrid";
@@ -69,7 +69,7 @@ export default function CalendarManager({
     const days = Array.from({ length: 7 }).map((_, i) => {
       const date = addDays(weekStart, i);
       const isToday = isSameDay(date, today);
-      const dateStr = date.toISOString().split("T")[0];
+      const dateStr = format(date, "yyyy-MM-dd");
       const dayOfWeek = date.getDay();
 
       // Find sessions for this specific date

@@ -23,7 +23,7 @@ export default function OnboardingForm({ initialData }: { initialData: any }) {
       studyEndTime: initialData?.studyEndTime || "18:00",
       dailyBuffer: initialData?.dailyBuffer || 30,
       offDay: initialData?.offDay ?? 0,
-      timezone: initialData?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+      tz: initialData?.tz || Intl.DateTimeFormat().resolvedOptions().timeZone,
     }
   });
 
@@ -129,13 +129,40 @@ export default function OnboardingForm({ initialData }: { initialData: any }) {
           <div className="space-y-2 md:col-span-2">
             <label className="block font-ui text-[0.65rem] uppercase tracking-[0.2em] font-bold text-ed-ink flex justify-between">
               <span>Timezone (IANA)</span>
-              <span className="text-ed-ink-light normal-case tracking-normal">Auto-detected by locale</span>
+              <span className="text-ed-ink-light normal-case tracking-normal">Localized to your region</span>
             </label>
-            <input 
-              {...register("timezone")}
-              type="text" 
-              className="w-full bg-transparent border-b-2 border-ed-ink focus:outline-none focus:border-ed-rust font-body text-xl py-2 text-ed-ink transition-colors"
-            />
+            <select 
+              {...register("tz")}
+              className="w-full bg-transparent border-b-2 border-ed-ink focus:outline-none focus:border-ed-rust font-body text-xl py-2 text-ed-ink appearance-none cursor-pointer"
+            >
+              <optgroup label="Africa">
+                <option value="Africa/Johannesburg">Africa/Johannesburg (SAST)</option>
+                <option value="Africa/Cairo">Africa/Cairo</option>
+                <option value="Africa/Lagos">Africa/Lagos</option>
+                <option value="Africa/Nairobi">Africa/Nairobi</option>
+              </optgroup>
+              <optgroup label="Europe">
+                <option value="Europe/London">Europe/London (GMT/BST)</option>
+                <option value="Europe/Paris">Europe/Paris (CET)</option>
+                <option value="Europe/Berlin">Europe/Berlin</option>
+                <option value="Europe/Rome">Europe/Rome</option>
+              </optgroup>
+              <optgroup label="Americas">
+                <option value="America/New_York">Eastern Time (ET)</option>
+                <option value="America/Chicago">Central Time (CT)</option>
+                <option value="America/Denver">Mountain Time (MT)</option>
+                <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                <option value="America/Sao_Paulo">Brasilia Time</option>
+              </optgroup>
+              <optgroup label="Asia/Pacific">
+                <option value="Asia/Dubai">Asia/Dubai</option>
+                <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                <option value="Asia/Singapore">Asia/Singapore</option>
+                <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                <option value="Australia/Sydney">Australia/Sydney</option>
+              </optgroup>
+              <option value="UTC">Universal Coordinated Time (UTC)</option>
+            </select>
           </div>
         </div>
       </section>

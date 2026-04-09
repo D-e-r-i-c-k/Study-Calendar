@@ -13,8 +13,8 @@ interface DayTimelineProps {
 }
 
 export default function DayTimeline({ currentDate, sessions, extramurals, onPrev, onNext }: DayTimelineProps) {
-  const isPast = isBefore(currentDate, startOfDay(new Date()));
-  
+  const isPast = isBefore(startOfDay(currentDate), startOfDay(new Date()));
+
   // Combine sessions and extramurals logically
   const timelineItems = [
     ...sessions
@@ -26,7 +26,7 @@ export default function DayTimeline({ currentDate, sessions, extramurals, onPrev
   ].sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   return (
-    <div className={`max-w-2xl mx-auto mt-4 pb-12 transition-all duration-500 ${isPast ? "opacity-50 grayscale-[0.3]" : ""}`}>
+    <div className="max-w-2xl mx-auto mt-4 pb-12 transition-all duration-500">
       {/* Day Header */}
       <div className="flex items-center justify-between border-b-2 border-ed-ink pb-6 mb-8">
         <div>
@@ -38,13 +38,13 @@ export default function DayTimeline({ currentDate, sessions, extramurals, onPrev
           </p>
         </div>
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={onPrev}
             className="w-10 h-10 border border-ed-rule bg-transparent font-display text-xl text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg"
           >
             ‹
           </button>
-          <button 
+          <button
             onClick={onNext}
             className="w-10 h-10 border border-ed-rule bg-transparent font-display text-xl text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg"
           >
@@ -68,7 +68,7 @@ export default function DayTimeline({ currentDate, sessions, extramurals, onPrev
               <div key={item.id} className="relative">
                 {/* Time Anchor Dot */}
                 <div className="absolute -left-[14px] top-2.5 w-3 h-3 rounded-full border-[3px] z-10 bg-ed-ink border-ed-bg" />
-                
+
                 {/* Time Label */}
                 <div className="absolute -left-[80px] top-1.5 font-ui text-xs font-semibold text-ed-ink tracking-widest uppercase text-right w-14">
                   {item.startTime}
@@ -86,7 +86,7 @@ export default function DayTimeline({ currentDate, sessions, extramurals, onPrev
                       const isPassed = isToday && (now.getHours() > endH || (now.getHours() === endH && now.getMinutes() >= endM));
 
                       return (
-                        <div className={`p-3 mb-2 border-l-[3px] bg-ed-paper transition-all duration-300 border border-ed-rule relative group ${isPassed ? "opacity-40 grayscale border-l-ed-rule" : "border-l-ed-gold hover:translate-x-1 cursor-pointer"}`}>
+                        <div className={`p-3 mb-2 border-l-[3px] bg-ed-paper transition-all duration-300 border border-ed-rule relative group ${isPassed ? "opacity-80 grayscale-[0.5] border-l-ed-rule" : "border-l-ed-gold hover:translate-x-1 cursor-pointer"}`}>
                           <div className="flex justify-between items-start">
                             <p className={`font-ui text-[0.6rem] uppercase tracking-[0.05em] ${isPassed ? "text-ed-rule line-through" : "text-ed-ink-faint"}`}>
                               {item.startTime} — {item.endTime}
@@ -118,10 +118,10 @@ export default function DayTimeline({ currentDate, sessions, extramurals, onPrev
 
       {/* End of day mark */}
       {timelineItems.length > 0 && (
-         <div className="pl-24 mt-6 relative">
-             <div className="absolute left-[79px] top-1.5 w-2 h-2 rounded-full border-2 border-ed-rule bg-ed-bg z-10" />
-             <p className="font-ui text-xs text-ed-ink-faint italic ml-6">End of itinerary</p>
-         </div>
+        <div className="pl-24 mt-6 relative">
+          <div className="absolute left-[79px] top-1.5 w-2 h-2 rounded-full border-2 border-ed-rule bg-ed-bg z-10" />
+          <p className="font-ui text-xs text-ed-ink-faint italic ml-6">End of itinerary</p>
+        </div>
       )}
     </div>
   );

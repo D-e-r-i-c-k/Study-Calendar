@@ -20,8 +20,7 @@ export async function ensureSeeded() {
       arrivalHome: "15:00",
       studyEndTime: "18:00",
       dailyBuffer: 30,
-      offDay: 0, // Sunday
-      timezone: "UTC",
+      tz: "UTC",
     },
   });
 

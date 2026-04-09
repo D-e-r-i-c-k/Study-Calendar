@@ -1,9 +1,9 @@
 "use client";
 
-import { 
-  startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
+import {
+  startOfMonth, endOfMonth, startOfWeek, endOfWeek,
   eachDayOfInterval, format, isSameMonth, isSameDay, isToday,
-  isBefore, startOfDay 
+  isBefore, startOfDay
 } from "date-fns";
 import { useTransition, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -49,7 +49,7 @@ function MonthSessionItem({ sess }: { sess: any }) {
   };
 
   return (
-    <div 
+    <div
       onClick={handleToggle}
       className={`text-[0.6rem] font-ui uppercase tracking-wide truncate leading-tight flex items-center gap-1 group transition-all cursor-pointer ${isCompleted ? "text-ed-ink-light line-through grayscale opacity-50" : "text-ed-ink hover:text-ed-rust"}`}
     >
@@ -87,13 +87,13 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
             </span>
           </h2>
           <div className="flex gap-2">
-            <button 
+            <button
               onClick={(e) => { e.stopPropagation(); onPrev(); }}
               className="w-8 h-8 border border-ed-rule bg-transparent font-display text-lg text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg"
             >
               ‹
             </button>
-            <button 
+            <button
               onClick={(e) => { e.stopPropagation(); onNext(); }}
               className="w-8 h-8 border border-ed-rule bg-transparent font-display text-lg text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg"
             >
@@ -120,13 +120,13 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
         {days.map((day, i) => {
           const isCurrentMonth = isSameMonth(day, monthStart);
           const isCurrentDay = isToday(day);
-          const isPast = isBefore(day, startOfDay(new Date()));
-          
+          const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
+
           // Find sessions and tests for this day
           const daySessions = sessions.filter(s => isSameDay(new Date(s.date), day));
           const dayTests = tests?.filter(t => isSameDay(new Date(t.date), day)) || [];
           const dayExtramurals = extramurals.filter(e => e.dayOfWeek === day.getDay());
-          
+
           // Style determination logic
           const getOpacityClass = () => {
             if (isCurrentDay) return "opacity-100";
@@ -136,8 +136,8 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
           };
 
           return (
-            <div 
-              key={day.toString()} 
+            <div
+              key={day.toString()}
               onClick={() => onChangeDate(day)}
               className={`
                 min-h-[100px] border-r border-ed-rule last:border-r-0 px-2 cursor-pointer
@@ -151,18 +151,18 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
               <div className="flex justify-between items-start mb-2">
                 <span className={`
                   font-display text-xl font-bold
-                  ${isCurrentDay ? "text-ed-bg bg-ed-ink rounded-full w-8 h-8 flex items-center justify-center -ml-1 -mt-1 shadow-sm" : 
+                  ${isCurrentDay ? "text-ed-bg bg-ed-ink rounded-full w-8 h-8 flex items-center justify-center -ml-1 -mt-1 shadow-sm" :
                     isCurrentMonth ? "text-ed-ink" : "text-ed-ink-faint"}
                 `}>
                   {format(day, dateFormat)}
                 </span>
-                
+
                 {/* Dots indicator for heavy days */}
                 {daySessions.length > 0 && (
                   <div className="flex gap-1 mt-1.5 flex-wrap justify-end max-w-[50%]">
                     {daySessions.slice(0, 3).map((sess, idx) => (
-                      <div 
-                        key={idx} 
+                      <div
+                        key={idx}
                         className={`w-1.5 h-1.5 rounded-full ${typeColorMap[sess.type] || "bg-ed-gold"}`}
                       />
                     ))}
@@ -190,9 +190,9 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
                   const isPassed = isTodayActive && (now.getHours() > endH || (now.getHours() === endH && now.getMinutes() >= endM));
 
                   return (
-                    <div 
-                      key={`ext-${ext.id}`} 
-                      className={`text-[0.6rem] font-ui font-semibold uppercase tracking-wide truncate leading-tight border-l-2 pl-1 mb-1 transition-all ${isPassed ? "text-ed-rule border-ed-rule line-through opacity-40 grayscale" : "text-ed-ink-light border-ed-gold"}`}
+                    <div
+                      key={`ext-${ext.id}`}
+                      className={`text-[0.6rem] font-ui font-semibold uppercase tracking-wide truncate leading-tight border-l-2 pl-1 mb-1 transition-all ${isPassed ? "text-ed-rule border-ed-rule opacity-40 grayscale" : "text-ed-ink-light border-ed-gold"}`}
                     >
                       {ext.emoji} {ext.name}
                     </div>

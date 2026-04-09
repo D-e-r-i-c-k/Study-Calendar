@@ -18,7 +18,7 @@ model User {
   studyEndTime  String?
   dailyBuffer   Int?
   offDay        Int?
-  timezone      String?
+  tz            String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

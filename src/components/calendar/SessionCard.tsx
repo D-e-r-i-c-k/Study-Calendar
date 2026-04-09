@@ -60,7 +60,7 @@ export default function SessionCard({ session }: SessionCardProps) {
       className={`
         p-2 mb-2 border-l-[3px] text-left cursor-pointer relative group
         transition-all duration-300 hover:translate-x-1
-        ${isCompleted ? "bg-ed-bg opacity-40 grayscale border-l-ed-rule" : "bg-ed-paper"}
+        ${isCompleted ? "bg-ed-bg opacity-80 grayscale-[0.5] border-l-ed" : "bg-ed-paper"}
         ${!isCompleted ? (borderMap[session.type] || "border-l-ed-gold") : ""}
       `}
     >
@@ -72,15 +72,14 @@ export default function SessionCard({ session }: SessionCardProps) {
           {isCompleted && <Check size={10} className="text-ed-bg" />}
         </div>
       </div>
-      
+
       <p className={`font-display font-semibold text-sm mt-0.5 leading-tight ${isCompleted ? "text-ed-ink-light line-through decoration-ed-rule decoration-2" : "text-ed-ink"}`}>
         {session.test.name}
       </p>
-      
+
       <p
-        className={`font-ui text-[0.55rem] uppercase tracking-[0.1em] mt-1 font-semibold ${
-          isCompleted ? "text-ed-ink-light" : (typeColorMap[session.type] || "text-ed-gold")
-        }`}
+        className={`font-ui text-[0.55rem] uppercase tracking-[0.1em] mt-1 font-semibold ${isCompleted ? "text-ed-ink-light" : (typeColorMap[session.type] || "text-ed-gold")
+          }`}
       >
         {typeLabels[session.type] || session.type}
       </p>
