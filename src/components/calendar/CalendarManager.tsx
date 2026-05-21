@@ -59,10 +59,10 @@ export default function CalendarManager({
   const buildWeekSchedule = () => {
     const weekStart = startOfWeek(state.currentDate, { weekStartsOn: 0 }); // 0 = Sunday
     const weekEnd = addDays(weekStart, 6);
-    
+
     // Calculate week number dynamically based on the current date
-    const weekNumber = getWeek(state.currentDate, { weekStartsOn: 0 }); 
-    
+    const weekNumber = getWeek(state.currentDate, { weekStartsOn: 0 });
+
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const today = new Date();
 
@@ -109,19 +109,19 @@ export default function CalendarManager({
     <div>
       <div className="flex items-center justify-between mb-6 px-2">
         <div className="flex gap-4">
-          <button 
-            className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "week" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
-            onClick={() => changeViewMode("week")}
-          >
-            Week
-          </button>
-          <button 
+          <button
             className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "month" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
             onClick={() => changeViewMode("month")}
           >
             Ledger
           </button>
-          <button 
+          <button
+            className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "week" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
+            onClick={() => changeViewMode("week")}
+          >
+            Week
+          </button>
+          <button
             className={`font-ui text-xs font-semibold uppercase tracking-wider pb-1 border-b-2 transition-all ${state.viewMode === "day" ? "border-ed-rust text-ed-ink" : "border-transparent text-ed-ink-light hover:text-ed-ink"}`}
             onClick={() => changeViewMode("day")}
           >
@@ -132,34 +132,33 @@ export default function CalendarManager({
 
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         {state.viewMode === "week" && (
-          <CalendarGrid 
-            week={weekData} 
-            onPrev={handlePrev} 
-            onNext={handleNext} 
-            tests={tests}
+          <CalendarGrid
+            week={weekData}
+            onPrev={handlePrev}
+            onNext={handleNext}
           />
         )}
-        
+
         {state.viewMode === "month" && (
-          <MonthGrid 
-             currentDate={state.currentDate}
-             sessions={sessions}
-             extramurals={extramurals}
-             tests={tests}
-             onChangeDate={(d: Date) => setState((s) => ({ ...s, currentDate: d, viewMode: "week" }))}
-             onPrev={handlePrev}
-             onNext={handleNext}
+          <MonthGrid
+            currentDate={state.currentDate}
+            sessions={sessions}
+            extramurals={extramurals}
+            tests={tests}
+            onChangeDate={(d: Date) => setState((s) => ({ ...s, currentDate: d, viewMode: "week" }))}
+            onPrev={handlePrev}
+            onNext={handleNext}
           />
         )}
 
         {state.viewMode === "day" && (
-           <DayTimeline 
-             currentDate={state.currentDate}
-             sessions={sessions}
-             extramurals={extramurals}
-             onPrev={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, -1) }))}
-             onNext={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, 1) }))}
-           />
+          <DayTimeline
+            currentDate={state.currentDate}
+            sessions={sessions}
+            extramurals={extramurals}
+            onPrev={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, -1) }))}
+            onNext={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, 1) }))}
+          />
         )}
       </div>
     </div>

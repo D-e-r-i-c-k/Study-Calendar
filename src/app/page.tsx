@@ -29,10 +29,14 @@ export default async function DashboardPage() {
     orderBy: { date: 'asc' }
   });
 
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const upcomingTests = tests.filter(test => test.date >= todayStart);
+
   return (
     <>
       <div className="grid grid-cols-1 xl:grid-cols-[250px_1fr_280px] max-w-[1400px] mx-auto min-h-[calc(100vh-180px)]">
-        <Sidebar subjects={user.subjects as any} tests={tests as any} />
+        <Sidebar subjects={user.subjects as any} tests={upcomingTests as any} />
         <main className="p-6">
           <CalendarManager 
             initialDate={new Date()}

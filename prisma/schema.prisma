@@ -53,6 +53,7 @@ model Test {
   date       DateTime
   difficulty Int
   prepDays   Int
+  result     String?
   subject    Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   sessions   StudySession[]
 }

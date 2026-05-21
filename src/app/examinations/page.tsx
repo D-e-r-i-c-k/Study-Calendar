@@ -5,7 +5,13 @@ import { format } from "date-fns";
 export default async function ExaminationsPage() {
   const subjects = await prisma.subject.findMany({ select: { id: true, name: true } });
   
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
   const tests = await prisma.test.findMany({
+    where: {
+      date: { gte: todayStart },
+    },
     include: { subject: true },
     orderBy: { date: "asc" },
   });

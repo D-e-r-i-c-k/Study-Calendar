@@ -13,7 +13,7 @@ export const examinationSchema = z.object({
   subjectId: z.string().min(1, "Please select an affiliated subject."),
   name: z.string().min(2, "Exam name must be descriptive."),
   date: z.date({
-    required_error: "A valid date is required.",
+    message: "A valid date is required.",
   }),
   difficulty: z.number().min(1).max(10),
   prepDays: z.number().min(1).max(30),

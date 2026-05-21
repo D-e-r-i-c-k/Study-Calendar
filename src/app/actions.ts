@@ -165,3 +165,10 @@ export async function deleteExtramural(id: string) {
     where: { id },
   });
 }
+
+export async function updateTestResult(id: string, result: string | null) {
+  return await prisma.test.update({
+    where: { id },
+    data: { result },
+  });
+}

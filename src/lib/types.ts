@@ -21,6 +21,7 @@ export interface Test {
   date: string; // ISO date string
   difficulty: number; // 1-10
   prepDays: number;
+  result?: string | null;
 }
 
 export interface StudySession {

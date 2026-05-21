@@ -9,6 +9,7 @@ export default function EdNav() {
   const navLinks = [
     { name: "CALENDAR", path: "/" },
     { name: "EXAMINATIONS", path: "/examinations" },
+    { name: "RESULTS", path: "/results" },
     { name: "SUBJECTS", path: "/subjects" },
     { name: "AVAILABILITY", path: "/availability" },
     { name: "PREFERENCES", path: "/onboarding" },
