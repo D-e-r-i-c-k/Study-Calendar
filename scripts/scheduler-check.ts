@@ -99,16 +99,29 @@ async function main() {
   console.log(USE_DEMO ? "\nSOURCE  built-in demo fixture" : "\nSOURCE  live database");
 
   const settings = resolveSettings(user);
+  const engineTests = tests.map((t) => ({
+    id: t.id,
+    subjectId: t.subjectId,
+    date: t.date,
+    difficulty: t.difficulty,
+    prepDays: t.prepDays,
+  }));
+
+  // Work already ticked off, whenever it happened. The engine must count it
+  // against the exam's outstanding load, or every rebuild re-demands sessions
+  // the student has already sat.
+  const completedSessions = demo
+    ? []
+    : await prisma.studySession.findMany({
+        where: { completed: true },
+        select: { testId: true, date: true, startTime: true, duration: true },
+      });
+
   const { sessions, unplaced } = generateSchedule({
     user,
-    tests: tests.map((t) => ({
-      id: t.id,
-      subjectId: t.subjectId,
-      date: t.date,
-      difficulty: t.difficulty,
-      prepDays: t.prepDays,
-    })),
+    tests: engineTests,
     busy,
+    existing: completedSessions,
     from: todayStart,
   });
 
@@ -225,7 +238,67 @@ async function main() {
   for (const t of tests) {
     const required = sessionsForDifficulty(t.difficulty);
     const got = sessions.filter((s) => s.testId === t.id).length;
+    const done = completedSessions.filter((s) => s.testId === t.id).length;
     check(got <= required, `${t.name} got ${got} sessions but difficulty ${t.difficulty} calls for ${required}`);
+    check(
+      got + done <= required,
+      `${t.name} got ${got} new sessions on top of ${done} already completed, over the ${required} its difficulty calls for`
+    );
+  }
+
+  for (const s of sessions) {
+    check(s.date >= todayStart, `a session was placed in the past (${format(s.date, "yyyy-MM-dd")})`);
+  }
+
+  // --- Regression guard: completed work must discharge the workload ---
+  //
+  // regenerateSchedule once bounded its "completed" query to today onwards, so
+  // sessions sat yesterday never reached the engine and were demanded all over
+  // again — the outstanding load crept up every day. Pin the behaviour here.
+  {
+    const subject = engineTests[0];
+    const alreadyDone = [
+      {
+        testId: subject.id,
+        date: new Date(todayStart.getTime() - 3 * 24 * 60 * 60 * 1000),
+        startTime: "15:30",
+        duration: settings.sessionMinutes,
+      },
+      {
+        testId: subject.id,
+        date: new Date(todayStart.getTime() - 2 * 24 * 60 * 60 * 1000),
+        startTime: "15:30",
+        duration: settings.sessionMinutes,
+      },
+    ];
+
+    const baseline = generateSchedule({ user, tests: engineTests, busy, from: todayStart });
+    const discounted = generateSchedule({
+      user,
+      tests: engineTests,
+      busy,
+      existing: alreadyDone,
+      from: todayStart,
+    });
+
+    // Count total demand, not placed sessions: when a prep window is already
+    // saturated, discounting the workload converts overflow into placements
+    // rather than reducing the number of blocks on the calendar.
+    const demandFor = (r: typeof baseline) =>
+      r.sessions.filter((s) => s.testId === subject.id).length +
+      r.unplaced.filter((d) => d.testId === subject.id).length;
+
+    const before = demandFor(baseline);
+    const after = demandFor(discounted);
+
+    check(
+      before - after === alreadyDone.length,
+      `two sessions completed in the past should reduce the demand by exactly 2, but it went ${before} -> ${after}`
+    );
+    check(
+      discounted.sessions.every((s) => s.date >= todayStart),
+      "past completed work must not drag new sessions into the past"
+    );
   }
 
   console.log("");
