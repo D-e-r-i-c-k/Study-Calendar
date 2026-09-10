@@ -34,11 +34,23 @@ There is no `prisma/migrations/` directory. Schema changes go through `prisma db
   Server actions in `src/app/actions.ts` do *not* call `revalidatePath` — client forms wrap the call
   in `useTransition` + `router.refresh()`. Inline `"use server"` closures declared inside server
   pages (e.g. `src/app/subjects/page.tsx`, `src/app/availability/page.tsx`) *do* call
-  `revalidatePath`.
+  `revalidatePath`. The single exception is `withRecalculation()` in `actions.ts`, which
+  revalidates `/`: it changes the dashboard's schedule while the user is standing on another
+  route, and `router.refresh()` can only refresh the route it is on. Do not copy that exception
+  into the other actions.
 - Route convention: each folder under `src/app/` pairs an async server `page.tsx` with a co-located
   `"use client"` form component.
-- `src/lib/mock-data.ts` still backs parts of the dashboard (weekly stats, subject progress, today's
-  agenda) — those are not DB-driven yet.
+- **Every mutation the engine cares about recalculates automatically.** `createExamination`,
+  `updateExamination`, `deleteExamination`, `createExtramural`, `deleteExtramural`, `createEvent`,
+  `deleteEvent`, `updateUserProfile` and `deleteSubject` all run through `withRecalculation()`.
+  Adding another such mutation means wrapping it too. `toggleSessionCompletion` is deliberately
+  outside this — see plan.md Phase 5.
+- `carryReviewDebt()` runs during the dashboard render, right after `ensureSeeded()`. It is
+  idempotent and must stay that way, and it must never call `revalidatePath` — that would be a
+  cache mutation during render, and a refresh loop on `/`.
+- `src/lib/mock-data.ts` is **seed fixtures only** now. Nothing in it reaches the UI; the dashboard's
+  figures come from `src/lib/stats.ts`, which is Prisma-free like `src/lib/scheduler/` so
+  `scripts/stats-check.ts` can exercise it without a database.
 
 ## Gotchas
 
@@ -70,10 +82,14 @@ There is no `prisma/migrations/` directory. Schema changes go through `prisma db
 - One feature per commit. Conventional commit messages (`feat:`, `refactor:`, `docs:`).
 - Verify before opening a PR (`/verify-app`), then open the PR as a **draft** and stop.
   Never merge a PR or mark it ready for review — the user tests it first.
-- Lint + build currently stand in for a test suite, because none exists.
+- Lint + build currently stand in for a test suite, because none exists. `npx tsx
+  scripts/scheduler-check.ts [--demo]` and `npx tsx scripts/stats-check.ts` assert the engine and
+  the insight aggregates; run both. Note `npm run lint` has ~34 pre-existing errors — compare
+  against the baseline rather than expecting zero.
 
 ## Reference
 
 - `@app.md` — product spec (scheduling engine, spaced-repetition rules). Note it specifies
   PostgreSQL; the implementation deliberately uses SQLite instead.
-- `@plan.md` — phase roadmap. Phase 3 (CRUD/input UIs) is the current phase.
+- `@plan.md` — phase roadmap. Phases 1-5 are complete; Phase 6 (production readiness: auth,
+  PostgreSQL, deployment) is next.
