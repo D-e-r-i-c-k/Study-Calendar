@@ -1,8 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { subjects, tests, extramurals, sessions } from "@/lib/mock-data";
+import { subjects, tests, extramurals } from "@/lib/mock-data";
 import { eventSchema } from "@/lib/validations";
+import { generateSchedule } from "@/lib/scheduler/generate";
+import type { BusyBlock } from "@/lib/scheduler/types";
 
 export async function ensureSeeded() {
   const userCount = await prisma.user.count();
@@ -67,20 +69,9 @@ export async function ensureSeeded() {
     });
   }
 
-  // Seed Sessions
-  for (const sess of sessions) {
-    await prisma.studySession.create({
-      data: {
-        id: sess.id,
-        testId: sess.testId,
-        date: new Date(sess.date),
-        startTime: sess.startTime,
-        duration: sess.duration,
-        type: sess.type,
-        completed: sess.completed,
-      },
-    });
-  }
+  // Study sessions are no longer seeded from mock data — the Phase 4 engine
+  // produces them. Hit "Generate Schedule" on the dashboard to populate the
+  // calendar from the seeded subjects and examinations.
 
   console.log("Seeding complete.");
 }
@@ -235,3 +226,90 @@ export async function deleteEvent(id: string) {
   });
 }
 
+
+// --- Scheduling Engine ---
+
+export interface RegenerateSummary {
+  created: number;
+  removed: number;
+  unplaced: number;
+  daysCovered: number;
+  preserved: number;
+}
+
+/**
+ * Rebuild every future study session from the current exams, availability and
+ * preferences (Phase 4). Completed work and anything already in the past is left
+ * untouched, so the historical log survives a regeneration.
+ */
+export async function regenerateSchedule(): Promise<RegenerateSummary> {
+  const user = await prisma.user.findFirst({
+    include: { extramurals: true, events: true },
+  });
+  if (!user) throw new Error("No primary user found.");
+
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const upcomingTests = await prisma.test.findMany({
+    where: {
+      subject: { userId: user.id },
+      date: { gte: todayStart },
+    },
+    select: { id: true, subjectId: true, date: true, difficulty: true, prepDays: true },
+  });
+
+  const busy: BusyBlock[] = [
+    ...user.extramurals.map((e) => ({
+      dayOfWeek: e.dayOfWeek,
+      startTime: e.startTime,
+      endTime: e.endTime,
+    })),
+    ...user.events.map((e) => ({
+      date: e.date,
+      startTime: e.startTime,
+      endTime: e.endTime,
+    })),
+  ];
+
+  // Completed sessions stay put. The engine plans around them: their slots are
+  // off limits, and each one counts against its exam's remaining workload.
+  const preserved = await prisma.studySession.findMany({
+    where: { date: { gte: todayStart }, completed: true },
+    select: { testId: true, date: true, startTime: true, duration: true },
+  });
+
+  const removed = await prisma.studySession.deleteMany({
+    where: { date: { gte: todayStart }, completed: false },
+  });
+
+  const { sessions, unplaced } = generateSchedule({
+    user,
+    tests: upcomingTests,
+    busy,
+    existing: preserved,
+    from: todayStart,
+  });
+
+  if (sessions.length > 0) {
+    await prisma.studySession.createMany({
+      data: sessions.map((s) => ({
+        testId: s.testId,
+        date: s.date,
+        startTime: s.startTime,
+        duration: s.duration,
+        type: s.type,
+      })),
+    });
+  }
+
+  const daysCovered = new Set(sessions.map((s) => s.date.toDateString())).size;
+
+  return {
+    created: sessions.length,
+    removed: removed.count,
+    unplaced: unplaced.length,
+    daysCovered,
+    preserved: preserved.length,
+  };
+}

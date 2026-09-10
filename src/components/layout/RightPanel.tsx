@@ -2,6 +2,7 @@ import type { SubjectProgress } from "@/lib/types";
 import StatBlock from "@/components/stats/StatBlock";
 import ProgressBar from "@/components/stats/ProgressBar";
 import TodayAgenda from "@/components/stats/TodayAgenda";
+import GenerateScheduleButton from "@/components/calendar/GenerateScheduleButton";
 
 interface RightPanelProps {
   stats: {
@@ -44,9 +45,9 @@ export default function RightPanel({
 
       <TodayAgenda items={todayItems} />
 
-      <button className="w-full py-3 mt-5 border border-ed-ink bg-transparent font-ui text-xs font-semibold uppercase tracking-[0.15em] text-ed-ink cursor-pointer transition-all duration-300 hover:bg-ed-ink hover:text-ed-bg">
-        + Schedule Examination
-      </button>
+      <div className="mt-5">
+        <GenerateScheduleButton compact />
+      </div>
     </aside>
   );
 }
