@@ -5,6 +5,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import RightPanel from "@/components/layout/RightPanel";
 import CalendarManager from "@/components/calendar/CalendarManager";
 import { subjectProgress, todayAgenda, weeklyStats } from "@/lib/mock-data";
+import { SCHEDULER_DEFAULTS } from "@/lib/scheduler-defaults";
 
 export default async function DashboardPage() {
   await ensureSeeded();
@@ -45,6 +46,7 @@ export default async function DashboardPage() {
             extramurals={user.extramurals as any}
             tests={tests as any}
             events={user.events as any}
+            offDay={user.offDay ?? SCHEDULER_DEFAULTS.offDay}
           />
         </main>
         <RightPanel

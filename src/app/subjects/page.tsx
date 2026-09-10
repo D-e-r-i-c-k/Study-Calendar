@@ -1,17 +1,32 @@
 import { prisma } from "@/lib/db";
 import SubjectForm from "./SubjectForm";
-import { deleteSubject } from "../actions";
+import SubjectMarker from "@/components/subjects/SubjectMarker";
+import { deleteSubject, updateSubject } from "../actions";
 import { revalidatePath } from "next/cache";
 
 export default async function SubjectsPage() {
-  const subjects = await prisma.subject.findMany({
-    orderBy: { name: "asc" },
-  });
+  const user = await prisma.user.findFirst();
+
+  const subjects = user
+    ? await prisma.subject.findMany({
+        where: { userId: user.id },
+        orderBy: { name: "asc" },
+      })
+    : [];
 
   async function removeSubject(formData: FormData) {
     "use server";
     const id = formData.get("id") as string;
     await deleteSubject(id);
+    revalidatePath("/subjects");
+  }
+
+  async function renameSubject(formData: FormData) {
+    "use server";
+    const id = formData.get("id") as string;
+    const name = (formData.get("name") as string)?.trim();
+    if (!name || name.length < 2) return;
+    await updateSubject(id, { name });
     revalidatePath("/subjects");
   }
 
@@ -42,22 +57,32 @@ export default async function SubjectsPage() {
              <p className="font-ui text-sm text-ed-ink-faint italic">No departments currently registered.</p>
            ) : (
              <ul className="space-y-4">
-                {subjects.map((subject) => {
-                  const isHex = subject.color.startsWith("#");
-                  return (
+                {subjects.map((subject) => (
                   <li key={subject.id} className="flex items-center justify-between group">
                     <div className="flex items-center space-x-4 flex-1">
                       {/* Color Swatch Indicator */}
-                      <span 
-                        className={`w-3 h-3 border border-ed-ink flex-shrink-0 ${isHex ? "" : subject.color}`} 
-                        style={isHex ? { backgroundColor: subject.color } : {}}
-                      />
-                      
-                      {/* Typographic Label with Leader Pattern */}
-                      <span className="font-body text-xl font-medium text-ed-ink flex-shrink-0 bg-ed-bg pr-4 relative z-10">
-                        {subject.name}
+                      <span className="border border-ed-ink flex-shrink-0 leading-none">
+                        <SubjectMarker color={subject.color} />
                       </span>
-                      
+
+                      {/* Typographic Label — doubles as the rename field */}
+                      <form action={renameSubject} className="flex-shrink-0 bg-ed-bg pr-4 relative z-10 flex items-center gap-3">
+                        <input type="hidden" name="id" value={subject.id} />
+                        <input
+                          type="text"
+                          name="name"
+                          defaultValue={subject.name}
+                          aria-label={`Rename ${subject.name}`}
+                          className="font-body text-xl font-medium text-ed-ink bg-transparent border-b border-transparent hover:border-ed-rule focus:border-ed-rust focus:outline-none transition-colors w-56"
+                        />
+                        <button
+                          type="submit"
+                          className="font-ui text-[0.6rem] uppercase tracking-wider text-ed-ink-light hover:text-ed-ink opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          Amend
+                        </button>
+                      </form>
+
                       {/* Dotted Leader Line */}
                       <div className="flex-1 border-b-[3px] border-dotted border-ed-rule mx-2 transform translate-y-[-6px]" />
                     </div>
@@ -65,7 +90,7 @@ export default async function SubjectsPage() {
                     <div className="flex items-center space-x-6 bg-ed-bg pl-4 relative z-10">
                       {/* Placeholder standing, can be populated live later */}
                       <span className="font-ui text-sm font-bold text-ed-ink-light">N/A</span>
-                      
+
                       {/* Subdued Remove Form */}
                       <form action={removeSubject}>
                         <input type="hidden" name="id" value={subject.id} />
@@ -75,8 +100,7 @@ export default async function SubjectsPage() {
                       </form>
                     </div>
                   </li>
-                  );
-                })}
+                ))}
              </ul>
            )}
         </div>

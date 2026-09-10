@@ -3,6 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createEvent } from "@/app/actions";
+import { eventSchema } from "@/lib/validations";
 import { format } from "date-fns";
 
 interface AddEventModalProps {
@@ -42,28 +43,29 @@ export default function AddEventModal({ isOpen, onClose, defaultDate }: AddEvent
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Please enter an event name.");
-      return;
-    }
-    if (!dateStr) {
-      setError("Please select a date.");
+
+    // Same schema the server action enforces, so the user sees a readable
+    // message instead of a serialized ZodError.
+    const parsed = eventSchema.safeParse({
+      name: name.trim(),
+      date: dateStr ? new Date(dateStr) : new Date(NaN),
+      startTime,
+      endTime,
+      emoji,
+    });
+
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message ?? "Please check the event details.");
       return;
     }
 
     startTransition(async () => {
       try {
-        await createEvent({
-          name: name.trim(),
-          date: new Date(dateStr),
-          startTime,
-          endTime,
-          emoji,
-        });
+        await createEvent(parsed.data);
         router.refresh();
         onClose();
-      } catch (err: any) {
-        setError(err.message || "Failed to create event. Please try again.");
+      } catch {
+        setError("Failed to create event. Please try again.");
       }
     });
   };

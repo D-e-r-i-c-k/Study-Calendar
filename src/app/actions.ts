@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { subjects, tests, extramurals, sessions } from "@/lib/mock-data";
+import { eventSchema } from "@/lib/validations";
 
 export async function ensureSeeded() {
   const userCount = await prisma.user.count();
@@ -20,6 +21,7 @@ export async function ensureSeeded() {
       arrivalHome: "15:00",
       studyEndTime: "18:00",
       dailyBuffer: 30,
+      offDay: 0,
       tz: "UTC",
     },
   });
@@ -105,6 +107,13 @@ export async function createSubject(data: { name: string; color: string }) {
   });
 }
 
+export async function updateSubject(id: string, data: { name?: string; color?: string }) {
+  return await prisma.subject.update({
+    where: { id },
+    data,
+  });
+}
+
 export async function deleteSubject(id: string) {
   return await prisma.subject.delete({
     where: { id },
@@ -120,6 +129,29 @@ export async function createExamination(data: {
 }) {
   return await prisma.test.create({
     data,
+  });
+}
+
+export async function updateExamination(
+  id: string,
+  data: {
+    subjectId?: string;
+    name?: string;
+    date?: Date;
+    difficulty?: number;
+    prepDays?: number;
+  }
+) {
+  return await prisma.test.update({
+    where: { id },
+    data,
+  });
+}
+
+export async function deleteExamination(id: string) {
+  // Cascades through to the test's StudySession rows.
+  return await prisma.test.delete({
+    where: { id },
   });
 }
 
@@ -183,14 +215,16 @@ export async function createEvent(data: {
   const user = await prisma.user.findFirst();
   if (!user) throw new Error("No primary user found.");
 
+  const parsed = eventSchema.parse(data);
+
   return await prisma.event.create({
     data: {
       userId: user.id,
-      name: data.name,
-      date: data.date,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      emoji: data.emoji || "📅",
+      name: parsed.name,
+      date: parsed.date,
+      startTime: parsed.startTime,
+      endTime: parsed.endTime,
+      emoji: parsed.emoji || "📅",
     },
   });
 }

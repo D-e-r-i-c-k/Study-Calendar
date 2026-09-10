@@ -6,12 +6,17 @@ import { revalidatePath } from "next/cache";
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default async function AvailabilityPage() {
-  const extramurals = await prisma.extramural.findMany({
-    orderBy: [
-      { dayOfWeek: "asc" },
-      { startTime: "asc" }
-    ],
-  });
+  const user = await prisma.user.findFirst();
+
+  const extramurals = user
+    ? await prisma.extramural.findMany({
+        where: { userId: user.id },
+        orderBy: [
+          { dayOfWeek: "asc" },
+          { startTime: "asc" }
+        ],
+      })
+    : [];
 
   // Group by day exactly as requested
   const grouped = extramurals.reduce((acc, curr) => {

@@ -12,12 +12,13 @@ export default function EdNav() {
     { name: "RESULTS", path: "/results" },
     { name: "SUBJECTS", path: "/subjects" },
     { name: "AVAILABILITY", path: "/availability" },
-    { name: "PREFERENCES", path: "/onboarding" },
+    { name: "PROFILE", path: "/onboarding" },
+    { name: "PREFERENCES", path: "/preferences" },
   ];
 
   return (
     <nav className="border-b-2 border-ed-ink py-4 bg-ed-paper sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-8 flex justify-center space-x-12">
+      <div className="max-w-6xl mx-auto px-8 flex justify-center flex-wrap gap-x-10 gap-y-3">
         {navLinks.map((link) => {
           const isActive = pathname === link.path;
           return (

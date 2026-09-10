@@ -1,11 +1,8 @@
-// Support for dynamic tailwind classes and custom Hexadecimal strings
-export default function SubjectMarker({ color }: { color: string }) {
-  const isHex = color?.startsWith("#");
+import { resolveSubjectColor } from "@/lib/utils";
 
-  return (
-    <span 
-      className={`inline-block w-2.5 h-2.5 ${isHex ? "" : color}`} 
-      style={isHex ? { backgroundColor: color } : {}}
-    />
-  );
+// Supports bare palette names, Tailwind-style classes and custom hex strings.
+export default function SubjectMarker({ color }: { color: string }) {
+  const { className, style } = resolveSubjectColor(color, "bg");
+
+  return <span className={`inline-block w-2.5 h-2.5 ${className}`} style={style} />;
 }
