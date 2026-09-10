@@ -30,6 +30,8 @@ export default async function AvailabilityPage() {
     const id = formData.get("id") as string;
     await deleteExtramural(id);
     revalidatePath("/availability");
+    // Removing a commitment frees study slots, so the dashboard calendar moves too.
+    revalidatePath("/");
   }
 
   return (

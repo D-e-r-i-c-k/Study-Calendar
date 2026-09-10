@@ -89,21 +89,40 @@ workload. Demands that cannot fit are reported as overflow rather than silently 
 
 ---
 
-## ⏳ Phase 5: Dynamic Resilience & Polishing [NEXT UP]
+## ✅ Phase 5: Dynamic Resilience & Polishing [COMPLETED]
 
-The goal is to ensure the app doesn't break conceptually when life happens—dynamically recalculating the schedule on missed tasks or shifted milestones.
+The goal was to ensure the app doesn't break conceptually when life happens—dynamically recalculating the schedule on missed tasks or shifted milestones.
 
 - **Objective 5.1: Recalculation Triggers**
   - When new exams/extramurals are added, recalculate future uncompleted segments without destroying historical data logs.
-  - The mechanism exists (`regenerateSchedule()`); what remains is firing it automatically
-    rather than only from the button.
 - **Objective 5.2: "Review Debt" Pipeline**
   - Automatically cascade uncompleted past sessions into today's timeline if a user misses a day naturally.
 - **Objective 5.3: Gamification & Insights**
   - Populate Sidebar metrics with live SQL aggregate stats (Completion Ratio, Weak Subjects).
-  - The right panel (weekly figures, subject standing, today's agenda) is still the last of
-    `src/lib/mock-data.ts` reaching the UI.
   - Implement "Streak" mechanisms or visual rewards.
+
+**As built.** A `withRecalculation()` wrapper in `src/app/actions.ts` rebuilds the schedule after
+every mutation the engine cares about — examinations, extramurals, events, preferences and subject
+deletion — so the calendar no longer waits on the **Generate Schedule** button. Ticking a session
+deliberately does *not* regenerate: completing work only ever reduces what is owed, and reshuffling
+the day out from under a student mid-study would be hostile.
+
+`carryReviewDebt()` runs on every dashboard render. Missed sessions whose examination is still ahead
+are cleared and re-demanded into the prep window that remains — the cascade *is* the Phase 4 engine,
+since outstanding load is derived as `sessionsForDifficulty(difficulty) − completed`. Sessions missed
+before an exam that has already been sat are kept as history. It is idempotent, so a reload costs one
+query and no writes, and `ReviewDebtNotice` tells the student what moved.
+
+`src/lib/stats.ts` (Prisma-free, like the scheduler) computes weekly figures, subject standing, the
+weak-subject signal and the study streak from rows the dashboard already fetches — no extra queries.
+`StudySession.completedAt` was added so the streak measures days actually studied rather than days
+the plan happened to be fulfilled. `scripts/stats-check.ts` asserts the semantics, and
+`scripts/scheduler-check.ts` gained a regression guard for a defect found on the way: completed work
+dated before today was never counted against an exam's workload, so the remaining load inflated a
+little more every day.
+
+With this, `src/lib/mock-data.ts` is reduced to the seed fixtures it always should have been — no
+mock data reaches the UI.
 
 ---
 
