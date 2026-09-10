@@ -7,6 +7,7 @@ import CalendarGrid from "./CalendarGrid";
 import MonthGrid from "./MonthGrid";
 import DayTimeline from "./DayTimeline";
 import AddEventModal from "./AddEventModal";
+import GenerateScheduleButton from "./GenerateScheduleButton";
 
 interface CalendarManagerProps {
   initialDate: Date;
@@ -143,12 +144,15 @@ export default function CalendarManager({
           </button>
         </div>
 
-        <button
-          onClick={() => setIsAddEventOpen(true)}
-          className="bg-ed-ink text-ed-bg font-ui text-xs font-semibold uppercase tracking-wider px-3 py-1.5 border border-ed-ink hover:bg-ed-rust hover:border-ed-rust hover:text-ed-bg transition-colors cursor-pointer"
-        >
-          + Add Event
-        </button>
+        <div className="flex items-center gap-3">
+          <GenerateScheduleButton />
+          <button
+            onClick={() => setIsAddEventOpen(true)}
+            className="bg-ed-ink text-ed-bg font-ui text-xs font-semibold uppercase tracking-wider px-3 py-1.5 border border-ed-ink hover:bg-ed-rust hover:border-ed-rust hover:text-ed-bg transition-colors cursor-pointer"
+          >
+            + Add Event
+          </button>
+        </div>
       </div>
 
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { subjects, tests, extramurals, sessions } from "../src/lib/mock-data";
+import { subjects, tests, extramurals } from "../src/lib/mock-data";
 
 const prisma = new PrismaClient();
 
@@ -74,22 +74,8 @@ async function main() {
     )
   );
 
-  console.log("Seeding Sessions...");
-  await Promise.all(
-    sessions.map((sess) =>
-      prisma.studySession.create({
-        data: {
-          id: sess.id,
-          testId: sess.testId,
-          date: new Date(sess.date),
-          startTime: sess.startTime,
-          duration: sess.duration,
-          type: sess.type,
-          completed: sess.completed,
-        },
-      })
-    )
-  );
+  // Study sessions are generated, not seeded — run "Generate Schedule" on the
+  // dashboard (or npx tsx scripts/scheduler-check.ts to preview the output).
 
   console.log("Database Seed COMPLETE.");
 }

@@ -42,25 +42,27 @@ The goal was to move from static mock-ups to a live, query-driven state model.
 
 ---
 
-## ⏳ Phase 3: Input & Management UIs [NEXT UP]
+## ✅ Phase 3: Input & Management UIs [COMPLETED]
 
 The goal is to build the actual CRUD (Create, Read, Update, Delete) forms so the user can interactively shape the data without manually seeding a database.
 
 - **Objective 3.1: The Onboarding Wizard (`/onboarding`)**
-  - Build multi-step flow capturing: 
-    1. Academic profile. 
-    2. Hard chronological constraints (school end time, study cutoff, buffer time).
-    3. Recurring Extramurals.
+  - Shipped as a single-page profile form rather than a multi-step wizard — the app is
+    single-user with a seeded profile row, so there is no first-run flow to step through.
+  - Captures academic profile and the hard chronological constraints (school end, arrival
+    home, study cutoff, buffer). Recurring Extramurals live on `/availability`.
 - **Objective 3.2: Examinations Management (`/examinations`)**
   - Interface to input Test specifics (Subject, Date, Preparation length, and 1-10 Difficulty metrics).
+  - Amend and withdraw controls on the existing slate.
 - **Objective 3.3: Subject Preferences (`/subjects`)**
-  - Managing distinct subjects and associated color codes.
+  - Managing distinct subjects and associated color codes, with inline rename.
 - **Objective 3.4: Settings (`/preferences`)**
-  - Allow tweaking spaced-repetition models or rest days.
+  - Focus/break length, daily session and subject ceilings, weekend start, rest day and
+    the spaced-repetition offsets. These are the inputs the Phase 4 engine reads.
 
 ---
 
-## 🏃 Phase 4: The Intelligent Scheduling Engine [THE CORE]
+## ✅ Phase 4: The Intelligent Scheduling Engine [COMPLETED]
 
 The goal is to replace the mock session creation with the mathematically optimized scheduling generation logic described in the app specs. 
 
@@ -74,18 +76,33 @@ The goal is to replace the mock session creation with the mathematically optimiz
   - Force interleaving: Ensure consecutive daily sessions switch between distinct subjects.
   - Format blocks into strict 25m Focus / 5m Break structures internally.
 
+**As built.** `src/lib/scheduler/` — `load.ts` (difficulty → workload), `spacing.ts` (the
+repetition curve), `availability.ts` (the daily slot grid) and `generate.ts` (placement).
+The modules are Prisma-free and pure; `scripts/scheduler-check.ts` exercises them against the
+live database or a `--demo` fixture and asserts the app.md §5.3–5.4 invariants, standing in
+for the test suite this repo does not have.
+
+Generation is triggered explicitly by the **Generate Schedule** button on the dashboard.
+`regenerateSchedule()` rebuilds only future, uncompleted sessions — completed work is
+preserved, its slots are withheld from the engine, and it counts against its exam's remaining
+workload. Demands that cannot fit are reported as overflow rather than silently dropped.
+
 ---
 
-## 🔄 Phase 5: Dynamic Resilience & Polishing
+## ⏳ Phase 5: Dynamic Resilience & Polishing [NEXT UP]
 
 The goal is to ensure the app doesn't break conceptually when life happens—dynamically recalculating the schedule on missed tasks or shifted milestones.
 
 - **Objective 5.1: Recalculation Triggers**
   - When new exams/extramurals are added, recalculate future uncompleted segments without destroying historical data logs.
+  - The mechanism exists (`regenerateSchedule()`); what remains is firing it automatically
+    rather than only from the button.
 - **Objective 5.2: "Review Debt" Pipeline**
   - Automatically cascade uncompleted past sessions into today's timeline if a user misses a day naturally.
 - **Objective 5.3: Gamification & Insights**
   - Populate Sidebar metrics with live SQL aggregate stats (Completion Ratio, Weak Subjects).
+  - The right panel (weekly figures, subject standing, today's agenda) is still the last of
+    `src/lib/mock-data.ts` reaching the UI.
   - Implement "Streak" mechanisms or visual rewards.
 
 ---
