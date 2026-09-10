@@ -13,6 +13,7 @@ export default async function DashboardPage() {
     include: {
       subjects: true,
       extramurals: true,
+      events: true,
     },
   });
 
@@ -43,6 +44,7 @@ export default async function DashboardPage() {
             sessions={allSessions as any}
             extramurals={user.extramurals as any}
             tests={tests as any}
+            events={user.events as any}
           />
         </main>
         <RightPanel

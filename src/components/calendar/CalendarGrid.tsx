@@ -6,9 +6,10 @@ interface CalendarGridProps {
   week: any;
   onPrev?: () => void;
   onNext?: () => void;
+  onChangeDate?: (date: Date) => void;
 }
 
-export default function CalendarGrid({ week, onPrev, onNext }: CalendarGridProps) {
+export default function CalendarGrid({ week, onPrev, onNext, onChangeDate }: CalendarGridProps) {
   return (
     <div>
       <WeekHeader
@@ -25,9 +26,10 @@ export default function CalendarGrid({ week, onPrev, onNext }: CalendarGridProps
               {week.days.map((day: any) => (
                 <th
                   key={day.date}
+                  onClick={() => onChangeDate?.(new Date(day.date))}
                   className={`
                     font-ui text-[0.65rem] uppercase tracking-[0.15em] text-ed-ink-light 
-                    font-semibold p-2 border-b-2 border-ed-ink text-left
+                    font-semibold p-2 border-b-2 border-ed-ink text-left cursor-pointer hover:bg-ed-paper/30 transition-colors
                     ${day.isToday ? "bg-ed-paper" : ""}
                     ${
                       day.isOffDay
@@ -51,7 +53,11 @@ export default function CalendarGrid({ week, onPrev, onNext }: CalendarGridProps
           <tbody>
             <tr>
               {week.days.map((day: any) => (
-                <DayColumn key={day.date} day={day} />
+                <DayColumn
+                  key={day.date}
+                  day={day}
+                  onClick={() => onChangeDate?.(new Date(day.date))}
+                />
               ))}
             </tr>
           </tbody>

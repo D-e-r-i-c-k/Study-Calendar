@@ -1,28 +1,51 @@
 "use client";
 
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { format, isBefore, startOfDay } from "date-fns";
 import SessionCard from "./SessionCard";
 import type { StudySession } from "@/lib/types";
+import { deleteEvent } from "@/app/actions";
 
 interface DayTimelineProps {
   currentDate: Date;
   sessions: any[];
   extramurals: any[];
+  events: any[];
   onPrev: () => void;
   onNext: () => void;
 }
 
-export default function DayTimeline({ currentDate, sessions, extramurals, onPrev, onNext }: DayTimelineProps) {
+export default function DayTimeline({ currentDate, sessions, extramurals, events = [], onPrev, onNext }: DayTimelineProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const isPast = isBefore(startOfDay(currentDate), startOfDay(new Date()));
 
-  // Combine sessions and extramurals logically
+  const handleDeleteEvent = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this event?")) return;
+
+    startTransition(async () => {
+      try {
+        await deleteEvent(id);
+        router.refresh();
+      } catch (err) {
+        alert("Failed to delete event.");
+      }
+    });
+  };
+
+  // Combine sessions, extramurals, and events logically
   const timelineItems = [
     ...sessions
       .filter(s => new Date(s.date).toDateString() === currentDate.toDateString())
-      .map(s => ({ ...s, isSession: true })),
+      .map(s => ({ ...s, isSession: true, isExtramural: false, isEvent: false })),
     ...extramurals
       .filter(e => e.dayOfWeek === currentDate.getDay())
-      .map(e => ({ ...e, isExtramural: true }))
+      .map(e => ({ ...e, isSession: false, isExtramural: true, isEvent: false })),
+    ...events
+      .filter(e => new Date(e.date).toDateString() === currentDate.toDateString())
+      .map(e => ({ ...e, isSession: false, isExtramural: false, isEvent: true }))
   ].sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   return (
@@ -86,23 +109,34 @@ export default function DayTimeline({ currentDate, sessions, extramurals, onPrev
                       const isPassed = isToday && (now.getHours() > endH || (now.getHours() === endH && now.getMinutes() >= endM));
 
                       return (
-                        <div className={`p-3 mb-2 border-l-[3px] bg-ed-paper transition-all duration-300 border border-ed-rule relative group ${isPassed ? "opacity-80 grayscale-[0.5] border-l-ed-rule" : "border-l-ed-gold hover:translate-x-1 cursor-pointer"}`}>
+                        <div className={`p-3 mb-2 border-l-[3px] bg-ed-paper transition-all duration-300 border border-ed-rule relative group ${isPassed ? "opacity-80 grayscale-[0.5] border-l-ed-rule" : item.isEvent ? "border-l-ed-rust hover:translate-x-1" : "border-l-ed-gold hover:translate-x-1 cursor-pointer"}`}>
                           <div className="flex justify-between items-start">
                             <p className={`font-ui text-[0.6rem] uppercase tracking-[0.05em] ${isPassed ? "text-ed-rule line-through" : "text-ed-ink-faint"}`}>
                               {item.startTime} — {item.endTime}
                             </p>
-                            {isPassed && (
-                              <div className="w-3.5 h-3.5 border border-ed-ink bg-ed-ink flex items-center justify-center">
-                                <span className="text-ed-bg text-[10px]">✓</span>
-                              </div>
-                            )}
+                            <div className="flex items-center gap-2">
+                              {item.isEvent && (
+                                <button
+                                  onClick={(e) => handleDeleteEvent(e, item.id)}
+                                  disabled={isPending}
+                                  className="text-ed-rust hover:text-ed-ink font-ui text-[0.6rem] font-bold uppercase tracking-wider transition-colors cursor-pointer opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                                >
+                                  Delete
+                                </button>
+                              )}
+                              {isPassed && (
+                                <div className="w-3.5 h-3.5 border border-ed-ink bg-ed-ink flex items-center justify-center">
+                                  <span className="text-ed-bg text-[10px]">✓</span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                           <p className={`font-display font-semibold text-lg mt-1 ${isPassed ? "text-ed-ink-light line-through decoration-ed-rule decoration-2" : "text-ed-ink"}`}>
                             {item.emoji} {item.name}
                           </p>
                           {isPassed && (
                             <div className="mt-1 font-ui text-[0.55rem] uppercase tracking-[0.1em] text-ed-rust font-bold">
-                              Passed Completion
+                              Passed {item.isEvent ? "Event" : "Completion"}
                             </div>
                           )}
                         </div>

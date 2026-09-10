@@ -172,3 +172,32 @@ export async function updateTestResult(id: string, result: string | null) {
     data: { result },
   });
 }
+
+export async function createEvent(data: {
+  name: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  emoji?: string;
+}) {
+  const user = await prisma.user.findFirst();
+  if (!user) throw new Error("No primary user found.");
+
+  return await prisma.event.create({
+    data: {
+      userId: user.id,
+      name: data.name,
+      date: data.date,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      emoji: data.emoji || "📅",
+    },
+  });
+}
+
+export async function deleteEvent(id: string) {
+  return await prisma.event.delete({
+    where: { id },
+  });
+}
+

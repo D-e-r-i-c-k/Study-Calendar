@@ -14,6 +14,7 @@ interface MonthGridProps {
   sessions: any[];
   extramurals: any[];
   tests: any[];
+  events: any[];
   onChangeDate: (date: Date) => void;
   onPrev: () => void;
   onNext: () => void;
@@ -62,7 +63,7 @@ function MonthSessionItem({ sess }: { sess: any }) {
   );
 }
 
-export default function MonthGrid({ currentDate, sessions, extramurals, tests, onChangeDate, onPrev, onNext }: MonthGridProps) {
+export default function MonthGrid({ currentDate, sessions, extramurals, tests, events = [], onChangeDate, onPrev, onNext }: MonthGridProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -126,6 +127,13 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
           const daySessions = sessions.filter(s => isSameDay(new Date(s.date), day));
           const dayTests = tests?.filter(t => isSameDay(new Date(t.date), day)) || [];
           const dayExtramurals = extramurals.filter(e => e.dayOfWeek === day.getDay());
+          const dayEvents = events.filter(e => isSameDay(new Date(e.date), day));
+
+          const timedItems = [
+            ...dayExtramurals.map(ext => ({ ...ext, isExtramural: true, isEvent: false, isSession: false })),
+            ...dayEvents.map(evt => ({ ...evt, isExtramural: false, isEvent: true, isSession: false })),
+            ...daySessions.map(sess => ({ ...sess, isExtramural: false, isEvent: false, isSession: true }))
+          ].sort((a, b) => a.startTime.localeCompare(b.startTime));
 
           // Style determination logic
           const getOpacityClass = () => {
@@ -182,27 +190,45 @@ export default function MonthGrid({ currentDate, sessions, extramurals, tests, o
                   </div>
                 ))}
 
-                {/* Show Extramural Censors */}
-                {dayExtramurals.map(ext => {
-                  const now = new Date();
-                  const isTodayActive = now.toDateString() === day.toDateString();
-                  const [endH, endM] = ext.endTime.split(":").map(Number);
-                  const isPassed = isTodayActive && (now.getHours() > endH || (now.getHours() === endH && now.getMinutes() >= endM));
+                {/* Show timed items sorted by time */}
+                {timedItems.slice(0, 3).map(item => {
+                  if (item.isExtramural) {
+                    const now = new Date();
+                    const isTodayActive = now.toDateString() === day.toDateString();
+                    const [endH, endM] = item.endTime.split(":").map(Number);
+                    const isPassed = isTodayActive && (now.getHours() > endH || (now.getHours() === endH && now.getMinutes() >= endM));
 
-                  return (
-                    <div
-                      key={`ext-${ext.id}`}
-                      className={`text-[0.6rem] font-ui font-semibold uppercase tracking-wide truncate leading-tight border-l-2 pl-1 mb-1 transition-all ${isPassed ? "text-ed-rule border-ed-rule opacity-40 grayscale" : "text-ed-ink-light border-ed-gold"}`}
-                    >
-                      {ext.emoji} {ext.name}
-                    </div>
-                  );
+                    return (
+                      <div
+                        key={`ext-${item.id}`}
+                        className={`text-[0.6rem] font-ui font-semibold uppercase tracking-wide truncate leading-tight border-l-2 pl-1 mb-1 transition-all ${isPassed ? "text-ed-rule border-ed-rule opacity-40 grayscale" : "text-ed-ink-light border-ed-gold"}`}
+                      >
+                        <span className="text-ed-ink-faint mr-1">{item.startTime}</span>
+                        {item.emoji} {item.name}
+                      </div>
+                    );
+                  }
+
+                  if (item.isEvent) {
+                    const now = new Date();
+                    const isTodayActive = now.toDateString() === day.toDateString();
+                    const [endH, endM] = item.endTime.split(":").map(Number);
+                    const isPassed = isTodayActive && (now.getHours() > endH || (now.getHours() === endH && now.getMinutes() >= endM));
+
+                    return (
+                      <div
+                        key={`evt-${item.id}`}
+                        className={`text-[0.6rem] font-ui font-semibold uppercase tracking-wide truncate leading-tight border-l-2 pl-1 mb-1 transition-all ${isPassed ? "text-ed-rule border-ed-rule opacity-40 grayscale" : "text-ed-rust border-ed-rust"}`}
+                      >
+                        <span className="text-ed-ink-faint mr-1">{item.startTime}</span>
+                        {item.emoji || "📅"} {item.name}
+                      </div>
+                    );
+                  }
+
+                  // Otherwise, it's a study session
+                  return <MonthSessionItem key={item.id} sess={item} />;
                 })}
-
-                {/* Show normal study sessions */}
-                {daySessions.slice(0, 2).map((sess) => (
-                  <MonthSessionItem key={sess.id} sess={sess} />
-                ))}
               </div>
             </div>
           );

@@ -44,6 +44,16 @@ export interface Extramural {
   emoji?: string;
 }
 
+export interface Event {
+  id: string;
+  userId: string;
+  name: string;
+  date: string; // ISO date string or Date
+  startTime: string;
+  endTime: string;
+  emoji?: string | null;
+}
+
 export interface DaySchedule {
   date: string;
   dayName: string;
@@ -53,6 +63,7 @@ export interface DaySchedule {
   sessions: StudySession[];
   extramurals: Extramural[];
   tests?: any[];
+  events?: Event[];
 }
 
 export interface WeekSchedule {

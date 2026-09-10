@@ -24,6 +24,7 @@ model User {
 
   subjects    Subject[]
   extramurals Extramural[]
+  events      Event[]
 }
 
 model Subject {
@@ -68,3 +69,15 @@ model StudySession {
   completed Boolean  @default(false)
   test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
 }
+
+model Event {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  date      DateTime
+  startTime String
+  endTime   String
+  emoji     String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+

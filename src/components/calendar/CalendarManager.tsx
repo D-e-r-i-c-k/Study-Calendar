@@ -6,12 +6,14 @@ import type { CalendarState, ViewMode, TimeMode } from "@/lib/calendar-types";
 import CalendarGrid from "./CalendarGrid";
 import MonthGrid from "./MonthGrid";
 import DayTimeline from "./DayTimeline";
+import AddEventModal from "./AddEventModal";
 
 interface CalendarManagerProps {
   initialDate: Date;
   sessions: any[]; // Using any for now to map from Prisma
   extramurals: any[];
   tests: any[];
+  events?: any[];
 }
 
 export default function CalendarManager({
@@ -19,12 +21,15 @@ export default function CalendarManager({
   sessions,
   extramurals,
   tests,
+  events = [],
 }: CalendarManagerProps) {
   const [state, setState] = useState<CalendarState>({
     currentDate: initialDate,
     viewMode: "month",
     timeMode: "condensed",
   });
+
+  const [isAddEventOpen, setIsAddEventOpen] = useState(false);
 
   // Client-side Hydration for persistent viewMode
   useEffect(() => {
@@ -83,6 +88,12 @@ export default function CalendarManager({
       // Extramurals repeat weekly for now
       const dayExtramurals = extramurals.filter(e => e.dayOfWeek === dayOfWeek);
 
+      // Once-off events
+      const dayEvents = events.filter(e => {
+        const eDate = new Date(e.date);
+        return isSameDay(eDate, date);
+      });
+
       return {
         date: dateStr,
         dayName: dayNames[dayOfWeek],
@@ -92,6 +103,7 @@ export default function CalendarManager({
         sessions: daySessions,
         extramurals: dayExtramurals,
         tests: dayTests,
+        events: dayEvents,
       };
     });
 
@@ -128,6 +140,13 @@ export default function CalendarManager({
             Itinerary
           </button>
         </div>
+
+        <button
+          onClick={() => setIsAddEventOpen(true)}
+          className="bg-ed-ink text-ed-bg font-ui text-xs font-semibold uppercase tracking-wider px-3 py-1.5 border border-ed-ink hover:bg-ed-rust hover:border-ed-rust hover:text-ed-bg transition-colors cursor-pointer"
+        >
+          + Add Event
+        </button>
       </div>
 
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -136,6 +155,10 @@ export default function CalendarManager({
             week={weekData}
             onPrev={handlePrev}
             onNext={handleNext}
+            onChangeDate={(d: Date) => {
+              setState((s) => ({ ...s, currentDate: d, viewMode: "day" }));
+              localStorage.setItem("studyCalendarView", "day");
+            }}
           />
         )}
 
@@ -145,7 +168,11 @@ export default function CalendarManager({
             sessions={sessions}
             extramurals={extramurals}
             tests={tests}
-            onChangeDate={(d: Date) => setState((s) => ({ ...s, currentDate: d, viewMode: "week" }))}
+            events={events}
+            onChangeDate={(d: Date) => {
+              setState((s) => ({ ...s, currentDate: d, viewMode: "day" }));
+              localStorage.setItem("studyCalendarView", "day");
+            }}
             onPrev={handlePrev}
             onNext={handleNext}
           />
@@ -156,11 +183,18 @@ export default function CalendarManager({
             currentDate={state.currentDate}
             sessions={sessions}
             extramurals={extramurals}
+            events={events}
             onPrev={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, -1) }))}
             onNext={() => setState(s => ({ ...s, currentDate: addDays(s.currentDate, 1) }))}
           />
         )}
       </div>
+
+      <AddEventModal
+        isOpen={isAddEventOpen}
+        onClose={() => setIsAddEventOpen(false)}
+        defaultDate={state.currentDate}
+      />
     </div>
   );
 }
