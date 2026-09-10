@@ -14,6 +14,7 @@ interface CalendarManagerProps {
   extramurals: any[];
   tests: any[];
   events?: any[];
+  offDay: number;
 }
 
 export default function CalendarManager({
@@ -22,6 +23,7 @@ export default function CalendarManager({
   extramurals,
   tests,
   events = [],
+  offDay,
 }: CalendarManagerProps) {
   const [state, setState] = useState<CalendarState>({
     currentDate: initialDate,
@@ -99,7 +101,7 @@ export default function CalendarManager({
         dayName: dayNames[dayOfWeek],
         dayNumber: date.getDate(),
         isToday,
-        isOffDay: dayOfWeek === 0, // Mock: Sunday is off day
+        isOffDay: dayOfWeek === offDay,
         sessions: daySessions,
         extramurals: dayExtramurals,
         tests: dayTests,

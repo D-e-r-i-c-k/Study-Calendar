@@ -1,19 +1,13 @@
-import type { Test, SubjectColor } from "@/lib/types";
+import type { Test } from "@/lib/types";
+import { resolveSubjectColor } from "@/lib/utils";
 import DifficultyBar from "./DifficultyBar";
-
-const colorMap: Record<SubjectColor, string> = {
-  rust: "text-ed-rust",
-  navy: "text-ed-navy",
-  olive: "text-ed-olive",
-  burgundy: "text-ed-burgundy",
-  gold: "text-ed-gold",
-};
 
 interface TestEntryProps {
   test: Test;
 }
 
 export default function TestEntry({ test }: TestEntryProps) {
+  const subjectColor = resolveSubjectColor(test.subject.color, "color");
   const testDate = new Date(test.date);
   const now = new Date();
   const diffTime = testDate.getTime() - now.getTime();
@@ -27,7 +21,8 @@ export default function TestEntry({ test }: TestEntryProps) {
   return (
     <div className="mb-5 pb-5 border-b border-ed-rule">
       <p
-        className={`font-ui text-[0.6rem] uppercase tracking-[0.15em] font-semibold ${colorMap[test.subject.color]}`}
+        className={`font-ui text-[0.6rem] uppercase tracking-[0.15em] font-semibold ${subjectColor.className}`}
+        style={subjectColor.style}
       >
         {test.subject.name}
       </p>

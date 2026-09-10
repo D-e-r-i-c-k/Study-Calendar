@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id            String  @id @default(cuid())
   name          String?
   grade         String?
   curriculum    String?
@@ -19,8 +19,17 @@ model User {
   dailyBuffer   Int?
   offDay        Int?
   tz            String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  // Scheduling engine preferences (Phase 4 reads these; null = built-in default)
+  sessionMinutes    Int?
+  breakMinutes      Int?
+  maxSessionsPerDay Int?
+  maxSubjectsPerDay Int?
+  weekendStartTime  String?
+  spacingOffsets    String? // comma-joined day offsets, e.g. "1,2,4,7,10" (SQLite has no scalar lists)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   subjects    Subject[]
   extramurals Extramural[]
@@ -37,14 +46,14 @@ model Subject {
 }
 
 model Extramural {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   userId    String
   name      String
   dayOfWeek Int
   startTime String
   endTime   String
   emoji     String?
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Test {
@@ -80,4 +89,3 @@ model Event {
   emoji     String?
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-

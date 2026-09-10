@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import SubjectMarker from "@/components/subjects/SubjectMarker";
 import { format } from "date-fns";
 import ResultForm from "./ResultForm";
 
@@ -61,7 +62,6 @@ export default async function ResultsPage() {
             </thead>
             <tbody className="divide-y divide-ed-rule">
               {pastTests.map((test) => {
-                const isHex = test.subject?.color?.startsWith("#");
                 return (
                   <tr key={test.id} className="hover:bg-ed-paper/60 transition-colors font-body text-ed-ink">
                     {/* Date */}
@@ -72,10 +72,9 @@ export default async function ResultsPage() {
                     {/* Subject */}
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-2">
-                        <span 
-                          className={`w-3 h-3 border border-ed-ink inline-block ${isHex ? "" : test.subject?.color}`}
-                          style={isHex ? { backgroundColor: test.subject?.color } : {}}
-                        />
+                        <span className="border border-ed-ink inline-block leading-none">
+                          <SubjectMarker color={test.subject?.color} />
+                        </span>
                         <span className="font-semibold text-base">{test.subject.name}</span>
                       </div>
                     </td>

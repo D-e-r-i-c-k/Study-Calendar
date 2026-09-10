@@ -20,9 +20,9 @@ export default function OnboardingForm({ initialData }: { initialData: any }) {
       curriculum: initialData?.curriculum || "IEB",
       school: initialData?.school || "",
       schoolEndTime: initialData?.schoolEndTime || "14:30",
+      arrivalHome: initialData?.arrivalHome || "15:00",
       studyEndTime: initialData?.studyEndTime || "18:00",
       dailyBuffer: initialData?.dailyBuffer || 30,
-      offDay: initialData?.offDay ?? 0,
       tz: initialData?.tz || Intl.DateTimeFormat().resolvedOptions().timeZone,
     }
   });
@@ -89,6 +89,14 @@ export default function OnboardingForm({ initialData }: { initialData: any }) {
             />
           </div>
           <div className="space-y-2">
+            <label className="block font-ui text-[0.65rem] uppercase tracking-[0.2em] font-bold text-ed-ink">Arrival Home</label>
+            <input 
+              {...register("arrivalHome")}
+              type="time" 
+              className="w-full bg-transparent border-b-2 border-ed-ink focus:outline-none focus:border-ed-rust font-ui text-xl py-2 text-ed-ink transition-colors"
+            />
+          </div>
+          <div className="space-y-2">
             <label className="block font-ui text-[0.65rem] uppercase tracking-[0.2em] font-bold text-ed-ink">Absolute Sleep Cutoff</label>
             <input 
               {...register("studyEndTime")}
@@ -108,22 +116,6 @@ export default function OnboardingForm({ initialData }: { initialData: any }) {
               min="0"
               className="w-full bg-transparent border-b-2 border-ed-ink focus:outline-none focus:border-ed-rust font-body text-xl py-2 text-ed-ink transition-colors"
             />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block font-ui text-[0.65rem] uppercase tracking-[0.2em] font-bold text-ed-ink">Mandatory Rest Day</label>
-            <select 
-              {...register("offDay", { valueAsNumber: true })}
-              className="w-full bg-transparent border-b-2 border-ed-ink focus:outline-none focus:border-ed-rust font-body text-xl py-2 text-ed-ink appearance-none cursor-pointer"
-            >
-              <option value="0">Sunday</option>
-              <option value="1">Monday</option>
-              <option value="2">Tuesday</option>
-              <option value="3">Wednesday</option>
-              <option value="4">Thursday</option>
-              <option value="5">Friday</option>
-              <option value="6">Saturday</option>
-            </select>
           </div>
 
           <div className="space-y-2 md:col-span-2">
